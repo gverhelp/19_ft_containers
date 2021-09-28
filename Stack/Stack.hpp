@@ -4,7 +4,7 @@
 # include <iostream>
 # include <deque>
 
-template<class T, class Container = std::deque<T>>
+template<class T, class Container = std::deque<T> >
 class Stack
 {
     public:
@@ -32,7 +32,7 @@ class Stack
             return (this->C.back());
         }
 
-        const_reference top()
+        const_reference top() const
         {
             return (this->C.back());
         }
@@ -58,40 +58,40 @@ class Stack
         }
 
         ///// Non member function : relational operators /////
-        template< class T, class Container >
-        bool operator==(const std::stack<T,Container>& lhs, const std::stack<T,Container>& rhs)
+        template< class stack_type, class container_type >
+        bool operator==(const Stack<stack_type, container_type>& rhs)
         {
-            return (lhs.C == rhs.C);
+            return (this->C == rhs.C);
         }
 
-        template< class T, class Container >
-        bool operator!=(const std::stack<T,Container>& lhs, const std::stack<T,Container>& rhs)
+        template< class stack_type, class container_type >
+        bool operator!=(const Stack<stack_type, container_type>& rhs)
         {
-            return (lhs.C != rhs.C);
+            return (this->C != rhs.C);
         }
 	
-        template< class T, class Container >
-        bool operator<(const std::stack<T,Container>& lhs, const std::stack<T,Container>& rhs)
+        template< class stack_type, class container_type >
+        bool operator<(const Stack<stack_type, container_type>& rhs)
         {
-            return (lhs.C < rhs.C);
+            return (this->C < rhs.C);
         }
 	
-        template< class T, class Container >
-        bool operator<=(const std::stack<T,Container>& lhs, const std::stack<T,Container>& rhs)
+        template< class stack_type, class container_type >
+        bool operator<=(const Stack<stack_type, container_type>& rhs)
         {
-            return (lhs.C <= rhs.C);
+            return (this->C <= rhs.C);
         }
 
-        template< class T, class Container >
-        bool operator>(const std::stack<T,Container>& lhs, const std::stack<T,Container>& rhs)
+        template< class stack_type, class container_type >
+        bool operator>(const Stack<stack_type, container_type>& rhs)
         {
-            return (lhs.C > rhs.C);
+            return (this->C > rhs.C);
         }
 
-        template< class T, class Container >
-        bool operator>=(const std::stack<T,Container>& lhs, const std::stack<T,Container>& rhs)
+        template< class stack_type, class container_type >
+        bool operator>=(const Stack<stack_type, Container>& rhs)
         {
-            return (lhs.C >= rhs.C);
+            return (this->C >= rhs.C);
         }
 
     private:
