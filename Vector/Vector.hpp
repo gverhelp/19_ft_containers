@@ -3,6 +3,7 @@
 
 # include <memory>
 # include <iterator> //Remplacer par iterator.hpp
+# include "iterator.hpp"
 
 namespace ft
 {
@@ -11,18 +12,18 @@ namespace ft
     {
         public:
             ///// Member types /////
-            typedef T                                       value_type;
-            typedef Alloc                                   allocator_type;
-            typedef value_type&                             reference;
-            typedef const value_type&                       const_reference;
-            typedef value_type*                             pointer;
-            typedef const value_type*                       const_pointer;
-            typedef std::iterator<value_type>               iterator;
-            typedef const std::iterator<value_type>         const_iterator;
-            typedef std::reverse_iterator<iterator>         reverse_iterator;
-            typedef std::reverse_iterator<const_iterator>   const_reverse_iterator;
-            typedef unsigned long long                      difference_type;
-            typedef size_t                                  size_type;
+            typedef T                                               value_type;
+            typedef Alloc                                           allocator_type;
+            typedef value_type&                                     reference;
+            typedef const value_type&                               const_reference;
+            typedef value_type*                                     pointer;
+            typedef const value_type*                               const_pointer;
+            typedef std::iterator<value_type>                       iterator;
+            typedef const std::iterator<value_type>                 const_iterator;
+            typedef std::reverse_iterator<iterator>                 reverse_iterator;
+            typedef std::reverse_iterator<const_iterator>           const_reverse_iterator;
+            typedef ft::iterator_traits<iterator>::difference_type  difference_type;
+            typedef size_t                                          size_type;
 
             ///// Member functions : Constructors & Destructor + operator = /////
             explicit vector(const allocator_type& alloc = allocator_type()) //Default constructor
