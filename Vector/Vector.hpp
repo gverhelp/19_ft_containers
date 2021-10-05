@@ -24,22 +24,21 @@ namespace ft
             typedef unsigned long long                      difference_type;
             typedef size_t                                  size_type;
 
-
             ///// Member functions : Constructors & Destructor + operator = /////
-            explicit vector(const allocator_type& alloc = allocator_type()) // Default constructor
+            explicit vector(const allocator_type& alloc = allocator_type()) //Default constructor
             {
                 ///////////
             };
-            explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) // Fill constructor
+            explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) //Fill constructor
             {
                 ///////////
             };
             template <class InputIterator>
-            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) // Range constructor
+            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) //Range constructor
             {
                 ///////////
             };
-            vector(const vector& x) // Copy constructor
+            vector(const vector& x) //Copy constructor
             {
                 ///////////
             };
