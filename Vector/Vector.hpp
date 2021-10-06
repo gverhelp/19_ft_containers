@@ -11,119 +11,180 @@ namespace ft
     class vector
     {
         public:
-            ///// Member types /////
+            //------------------- Member types -------------------//
             typedef T                                               value_type;
             typedef Alloc                                           allocator_type;
-            typedef value_type&                                     reference;
-            typedef const value_type&                               const_reference;
-            typedef value_type*                                     pointer;
-            typedef const value_type*                               const_pointer;
-            typedef std::iterator<value_type>                       iterator;
-            typedef const std::iterator<value_type>                 const_iterator;
-            typedef std::reverse_iterator<iterator>                 reverse_iterator;
-            typedef std::reverse_iterator<const_iterator>           const_reverse_iterator;
-            typedef ft::iterator_traits<iterator>::difference_type  difference_type;
+            typedef typename allocator_type::reference              reference;
+            typedef typename allocator_type::const_reference        const_reference;
+            typedef typename allocator_type::pointer                pointer;
+            typedef typename allocator_type::const_pointer          const_pointer;
+            //typedef std::iterator<value_type>                     iterator;
+            //typedef std::iterator<const value_type>               const_iterator;
+            typedef std::reverse_iterator<value_type>               reverse_iterator;
+            typedef std::reverse_iterator<const value_type>         const_reverse_iterator;
+            //typedef ft::iterator_traits<iterator>::difference_type  difference_type;
             typedef size_t                                          size_type;
 
-            ///// Member functions : Constructors & Destructor + operator = /////
-            explicit vector(const allocator_type& alloc = allocator_type()) //Default constructor
+            //------------------- Member functions : Constructors & Destructor + operator = -------------------//
+            explicit vector(const allocator_type& alloc = allocator_type()): _base(alloc), _size(0), _maxSize(0) //Default constructor
             {
-                ///////////
-            };
-            explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) //Fill constructor
+                this->_ptr = this->_base.allocate(0);
+            }
+            explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()): _base(alloc), _size(n), _maxSize(n) //Fill constructor
             {
-                ///////////
-            };
+                this->_ptr = this->_base.allocate(n);
+                for (size_t a = 0; a < n; a++)
+                    this->_base.construct(_ptr + a, val);
+            }
             template <class InputIterator>
-            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) //Range constructor
-            {
+            //vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) //Range constructor
+            //{
                 ///////////
-            };
-            vector(const vector& x) //Copy constructor
+            //}
+            vector(const vector& x): _base(x._base), _size(x._size), _maxSize(x._maxSize) //Copy constructor
             {
-                ///////////
-            };
+                this->_ptr = this->_base.allocate(0);
+                *this = x;
+            }
             vector& operator=(const vector& x)
             {
                 if (this != &x)
                 {
-                    //////////
+                    this->clear();
+                    this->_base.deallocate(this->_ptr, this->_maxSize);
+                    this->_ptr = this->_base.allocate(x._maxSize);
+                    for (size_t a = 0; a < x._size; a++)
+                        this->_base.construct(this->_ptr + a, *(x._ptr + a));
+                    this->_size = x._size;
+                    this->_maxSize = x._maxSize;
                 }
                 return (*this);
-            };
-            virtual ~vector() // Destructor
+            }
+            virtual ~vector() //Destructor
             {
-                ///////////
-            };
+                this->clear();
+                this->_base.deallocate(this->_ptr, this->_maxSize);
+            }
 
-            ///// Member functions : Iterators /////
-            iterator begin() {}; //Return iterator to beginning
-            const_iterator begin() const {}; //Return iterator to beginning
-            iterator end() {}; //Return iterator to end
-            const_iterator end() const {}; //Return iterator to end
-            reverse_iterator rbegin() {}; //Return reverse iterator to reverse beginning
-            const_reverse_iterator rbegin() const {}; //Return reverse iterator to reverse beginning
-            reverse_iterator rend() {}; //Return reverse iterator to reverse end
-            const_reverse_iterator rend() const {}; //Return reverse iterator to reverse end
+            //------------------- Member functions : Iterators -------------------//
+            //iterator begin() {} //Return iterator to beginning
+            //const_iterator begin() const {} //Return iterator to beginning
+            //iterator end() {} //Return iterator to end
+            //const_iterator end() const {} //Return iterator to end
+            //reverse_iterator rbegin() {} //Return reverse iterator to reverse beginning
+            //const_reverse_iterator rbegin() const {} //Return reverse iterator to reverse beginning
+            //reverse_iterator rend() {} //Return reverse iterator to reverse end
+            //const_reverse_iterator rend() const {} //Return reverse iterator to reverse end
 
-            ///// Member functions : Capacity /////
-            size_type size() const {}; //Return size
-            size_type max_size() const {}; //Return maximum size
-            void resize(size_type n, value_type val = value_type()) {}; //Change size
-            size_type capacity() const {}; //Return size of allocated storage capacity
-            bool empty() const {}; //Test whether vector is empty 
-            void reserve(size_type n) {}; //Request a change in capacity
+            //------------------- Member functions : Capacity -------------------//
+            size_type size() const { return (this->_size); } //Return size
+            size_type max_size() const { return (this->_maxSize); } //Return maximum size
+            void resize(size_type n, value_type val = value_type()) //Change size
+            {
+                if (n < this->_size)
+                {
+                    for (size_t a = n; a < this->size; a++)
+                        this->_base.destroy(this->_ptr + a);
+                }
+                else if (n > this->_size)
+                {
+                    reserve(n);
+                    for (size_t a = this->_size; a < n; a++)
+                        this->_base.constructor(this->_ptr + a, val);
+                }
+                this->_size = n;
+            }
+            size_type capacity() const { return (this->_base.max_size); } //Return size of allocated storage capacity
+            bool empty() const //Test whether vector is empty
+            {
+                if (this->_size == 0)
+                    return (true);
+                return (false);
+            }
+            void reserve(size_type n) //Request a change in capacity
+            {
+                if (n > this->_maxSize)
+                {
+                    vector copy;
+                    copy = *this;
+                    this->clear();
+                    this->_base.deallocate(this->_ptr, this->_maxSize);
+                    this->_ptr = this->_base.allocate(n);
+                    for (size_t a = 0; a < copy._size; a++)
+                        this->_base.construct(this->_ptr + a, *(copy._ptr + a));
+                    this->_size = copy._size;
+                    this->_maxSize = n;
+                }
+            }
 
-            ///// Member functions : Element access /////
-            reference operator[](size_type n) {}; //Access element
-            const_reverse operator[](size_type n) const {} //Access element
-            reference at(size_type n) {}; //Access element
-            const_reference at(size_type n) const {}; //Access element
-            reference front() {}; //Access first element
-            const_reference front() const {}; //Access first element
-            reference back() {}; //Access last element
-            const_reference back() const {}; //Access last element
+            //------------------- Member functions : Element access -------------------//
+            reference operator[](size_type n) { return (at(n)); } //Access element 
+            const_reference operator[](size_type n) const { return (at(n)); } //Access element 
+            reference at(size_type n) //Access element
+            {
+                if (n >= this->_size)
+                    throw std::out_of_range("Vector"); 
+                return *(this->_ptr + n);
+            }
+            const_reference at(size_type n) const //Access element
+            {
+                if (n >= this->_size)
+                    throw std::out_of_range("Vector"); 
+                return *(this->_ptr + n);
+            }
+            reference front() { return (*this->_ptr); } //Access first element
+            const_reference front() const { return (*this->_ptr); } //Access first element
+            reference back() { return *(this->_ptr + this->_size - 1); } //Access last element
+            const_reference back() const { return *(this->_ptr + this->_size - 1); } //Access last element
 
-            ///// Member functions : Modifiers /////
-            template <class InputIterator>
-            void assign(InputIterator first, InputIterator last) {}; //Assign vector content 
-            void assign(size_type n, const value_type& val) {}; //Assign vector content 
-            void push_back(const value_type& val) {}; //Add element at the end
-            void pop_back() {}; //Delete last element
-            iterator insert(iterator position, const value_type& val) {}; //Insert elements
-            void insert(iterator position, size_type n, const value_type& val) {}; //Insert elements
-            template <class InputIterator>
-            void insert(iterator position, InputIterator first, InputIterator last) {}; //Insert elements
-            iterator erase(iterator position) {}; //Erase elements 
-            iterator erase(iterator first, iterator last) {}; //Erase elements 
-            void swap(vector& x) {}; //Swap content
-            void clear() {}; //Clear content 
+            //------------------- Member functions : Modifiers -------------------//
+            //template <class InputIterator>
+            //void assign(InputIterator first, InputIterator last) {} //Assign vector content 
+            //void assign(size_type n, const value_type& val) {} //Assign vector content 
+            void push_back(const value_type& val) { resize(this->_size + 1, val); } //Add element at the end
+            void pop_back() { resize(this->_size - 1, value_type()); } //Delete last element
+            //iterator insert(iterator position, const value_type& val) {} //Insert elements
+            //void insert(iterator position, size_type n, const value_type& val) {} //Insert elements
+            //template <class InputIterator>
+            //void insert(iterator position, InputIterator first, InputIterator last) {} //Insert elements
+            //iterator erase(iterator position) {} //Erase elements 
+            //iterator erase(iterator first, iterator last) {} //Erase elements 
+            void swap(vector& x) {} //Swap content
+            void clear() //Clear content
+            {
+                for (size_t a = 0; a < this->_maxSize; a++)
+                    this->_base.destroy(this->_ptr + a);
+                this->_size = 0;
+            }
 
-            ///// Member functions : Allocator /////
-            allocator_type get_allocator() const {}; //Get allocator
+            //------------------- Member functions : Allocator -------------------//
+            allocator_type get_allocator() const { return (this->_base); } //Get allocator
 
         private:
-            size_type _size;
-            size_type _maxSize;
+            size_type   _size;
+            size_type   _maxSize;
+            Alloc       _base;
+            pointer     _ptr;
     };
 
-    ///// Non-member function overloads /////
+    //------------------- Non-member function overloads -------------------//
     //Check le return sur cppref (Relational operators for vector)
-    template <class T, class Alloc>
-    bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {};
-    template <class T, class Alloc>
-    bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {};
-    template <class T, class Alloc>
-    bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {};
-    template <class T, class Alloc>
-    bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {};
-    template <class T, class Alloc>
-    bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {};
-    template <class T, class Alloc>
-    bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {};
+    //template <class T, class Alloc>
+    //bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+    //template <class T, class Alloc>
+    //bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+    //template <class T, class Alloc>
+    //bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+    //template <class T, class Alloc>
+    //bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+    //template <class T, class Alloc>
+    //bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
+    //template <class T, class Alloc>
+    //bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {}
 
-    template <class T, class Alloc>
-    void swap (vector<T, Alloc>& x, vector<T, Alloc>& y) {};
+    //template <class T, class Alloc>
+    //void swap (vector<T, Alloc>& x, vector<T, Alloc>& y) {}
+
 }
 
 #endif

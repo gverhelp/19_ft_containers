@@ -11,9 +11,9 @@ namespace ft
     {
         public:
             ///// Member types /////
-            typedef T value_type;
-            typedef Container container_type;
-            typedef size_t size_type;
+            typedef T           value_type;
+            typedef Container   container_type;
+            typedef size_t      size_type;
 
             ///// Member functions /////
             explicit stack(const container_type& ctnr = container_type()): C(ctnr) {}
