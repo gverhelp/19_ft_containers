@@ -83,14 +83,14 @@ namespace ft
             {
                 if (n < this->_size)
                 {
-                    for (size_t a = n; a < this->size; a++)
+                    for (size_t a = n; a < this->_size; a++)
                         this->_base.destroy(this->_ptr + a);
                 }
-                else if (n > this->_size)
+                if (n > this->_size)
                 {
                     reserve(n);
                     for (size_t a = this->_size; a < n; a++)
-                        this->_base.constructor(this->_ptr + a, val);
+                        this->_base.construct(this->_ptr + a, val);
                 }
                 this->_size = n;
             }
