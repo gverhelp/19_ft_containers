@@ -2,7 +2,7 @@
 # define VECTOR_HPP
 
 # include <memory>
-# include <iterator> //Remplacer par iterator.hpp
+//# include <iterator> //Remplacer par iterator.hpp
 # include "iterator.hpp"
 
 namespace ft
@@ -18,10 +18,10 @@ namespace ft
             typedef typename allocator_type::const_reference        const_reference;
             typedef typename allocator_type::pointer                pointer;
             typedef typename allocator_type::const_pointer          const_pointer;
-            //typedef std::iterator<value_type>                     iterator;
-            //typedef std::iterator<const value_type>               const_iterator;
-            typedef std::reverse_iterator<value_type>               reverse_iterator;
-            typedef std::reverse_iterator<const value_type>         const_reverse_iterator;
+            //typedef ft::iterator<value_type>                     iterator;
+            //typedef ft::iterator<const value_type>               const_iterator;
+            //typedef ft::reverse_iterator<value_type>               reverse_iterator;
+            //typedef ft::reverse_iterator<const value_type>         const_reverse_iterator;
             //typedef ft::iterator_traits<iterator>::difference_type  difference_type;
             typedef size_t                                          size_type;
 
@@ -149,11 +149,18 @@ namespace ft
             //void insert(iterator position, InputIterator first, InputIterator last) {} //Insert elements
             //iterator erase(iterator position) {} //Erase elements 
             //iterator erase(iterator first, iterator last) {} //Erase elements 
-            void swap(vector& x) {} //Swap content
+            void swap(vector& x) //Swap content
+            {
+                vector tmp;
+                tmp = *this;
+
+                *this = x;
+                x = tmp;
+            }
             void clear() //Clear content
             {
                 for (size_t a = 0; a < this->_maxSize; a++)
-                    this->_base.destroy(this->_ptr + a);
+                    this->_base.destroy(&this->_ptr[a]);
                 this->_size = 0;
             }
 
@@ -184,7 +191,6 @@ namespace ft
 
     //template <class T, class Alloc>
     //void swap (vector<T, Alloc>& x, vector<T, Alloc>& y) {}
-
 }
 
 #endif
