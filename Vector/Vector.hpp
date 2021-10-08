@@ -4,6 +4,7 @@
 # include <memory>
 //# include <iterator> //Remplacer par iterator.hpp
 # include "iterator.hpp"
+# include <iostream>
 
 namespace ft
 {
@@ -18,10 +19,10 @@ namespace ft
             typedef typename allocator_type::const_reference        const_reference;
             typedef typename allocator_type::pointer                pointer;
             typedef typename allocator_type::const_pointer          const_pointer;
-            //typedef ft::iterator<value_type>                     iterator;
-            //typedef ft::iterator<const value_type>               const_iterator;
-            //typedef ft::reverse_iterator<value_type>               reverse_iterator;
-            //typedef ft::reverse_iterator<const value_type>         const_reverse_iterator;
+            //typedef ft::iterator<value_type>                        iterator;
+            //typedef ft::iterator<const value_type>                  const_iterator;
+            //typedef ft::reverse_iterator<value_type>                reverse_iterator;
+            //typedef ft::reverse_iterator<const value_type>          const_reverse_iterator;
             //typedef ft::iterator_traits<iterator>::difference_type  difference_type;
             typedef size_t                                          size_type;
 
@@ -106,6 +107,7 @@ namespace ft
                 if (n > this->_maxSize)
                 {
                     vector copy;
+
                     copy = *this;
                     this->clear();
                     this->_base.deallocate(this->_ptr, this->_maxSize);
