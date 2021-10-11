@@ -2,6 +2,7 @@
 # define ITERATOR_HPP
 
 # include <cstddef>
+# include <iostream>
 
 namespace ft
 {
@@ -64,7 +65,7 @@ namespace ft
     {
         public:
             //------------------- Member types -------------------//
-            typedef Iterator                                                iterator_type;
+            typedef Iterator                                                    iterator_type;
             typedef typename ft::iterator_traits<Iterator>::iterator_category   iterator_category;
             typedef typename ft::iterator_traits<Iterator>::value_type          value_type;
             typedef typename ft::iterator_traits<Iterator>::difference_type     difference_type;
@@ -76,7 +77,7 @@ namespace ft
             explicit reverse_iterator(iterator_type x): current(x) {}
             template <class U>
             reverse_iterator(const reverse_iterator<U>& other): current(other.current) {}
-            template< class U >
+            //template< class U >
             //reverse_iterator& operator=(const reverse_iterator<U>& other) {}
 
             //------------------- Member functions -------------------//
@@ -96,6 +97,35 @@ namespace ft
         protected:
             iterator_type current;
     };
+        
+    template < class T >
+    class It
+    {
+        public:
+            typedef typename ft::iterator_traits<T*>::iterator_category   iterator_category;
+            typedef typename ft::iterator_traits<T*>::value_type          value_type;
+            typedef typename ft::iterator_traits<T*>::difference_type     difference_type;
+            typedef typename ft::iterator_traits<T*>::pointer             pointer;
+            typedef typename ft::iterator_traits<T*>::reference           reference;
+
+            It(pointer ptr = nullptr): _ptr(ptr) {}
+            ~It() { _ptr = nullptr; }
+
+            reference operator*() const { return (*this->_ptr); }
+            pointer operator->() const { return (this->_ptr); }
+            It& operator++() { this->_ptr++; return (*this); }
+            It operator++(int) { It tmp = *this; ++(*this); return (tmp); }
+            It& operator+=(difference_type n) { this->_ptr += n; return (*this); }         //// Maybe false
+            It operator+(difference_type n) const { It tmp = *this; return (tmp += n); }
+            It& operator-=(difference_type n) { this->_ptr -= n; return (*this); }
+            It operator-(difference_type n) const { It tmp = *this; return (tmp -= n); }
+            It& operator--() { this->_ptr--; return (*this); }
+            It  operator--(int) { It tmp = *this; --(*this); return (tmp); }
+            reference operator[](difference_type n) const { return *(this->_ptr + n); }
+
+        private:
+            T* _ptr;
+    };
 
     //------------------- Reverse iterator non-member functions -------------------//
     template< class Iterator1, class Iterator2 >
@@ -110,6 +140,20 @@ namespace ft
     bool operator>(const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() < rhs.base()); }
     template< class Iterator1, class Iterator2 >
     bool operator>=(const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() <= rhs.base()); }
+
+    //-------------------- It non-member functions --------------------//
+    template < class T >
+    bool operator==(const ft::It<T>& lhs, const ft::It<T> rhs) { return (*lhs == *rhs); }
+    template < class T >
+    bool operator!=(const ft::It<T>& lhs, const ft::It<T> rhs) { return (*lhs != *rhs); }
+    template < class T >
+    bool operator<(const ft::It<T>& lhs, const ft::It<T> rhs) { return (*lhs < *rhs); }
+    template < class T >
+    bool operator<=(const ft::It<T>& lhs, const ft::It<T> rhs) { return (*lhs <= *rhs); }
+    template < class T >
+    bool operator>(const ft::It<T>& lhs, const ft::It<T> rhs) { return (*lhs > *rhs); }
+    template < class T >
+    bool operator>=(const ft::It<T>& lhs, const ft::It<T> rhs) { return (*lhs >= *rhs); }
 }
 
 #endif

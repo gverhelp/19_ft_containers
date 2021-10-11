@@ -13,18 +13,18 @@ namespace ft
     {
         public:
             //------------------- Member types -------------------//
-            typedef T                                               value_type;
-            typedef Alloc                                           allocator_type;
-            typedef typename allocator_type::reference              reference;
-            typedef typename allocator_type::const_reference        const_reference;
-            typedef typename allocator_type::pointer                pointer;
-            typedef typename allocator_type::const_pointer          const_pointer;
-            //typedef ft::iterator<value_type>                        iterator;
-            //typedef ft::iterator<const value_type>                  const_iterator;
-            //typedef ft::reverse_iterator<value_type>                reverse_iterator;
-            //typedef ft::reverse_iterator<const value_type>          const_reverse_iterator;
-            //typedef ft::iterator_traits<iterator>::difference_type  difference_type;
-            typedef size_t                                          size_type;
+            typedef T                                                       value_type;
+            typedef Alloc                                                   allocator_type;
+            typedef typename allocator_type::reference                      reference;
+            typedef typename allocator_type::const_reference                const_reference;
+            typedef typename allocator_type::pointer                        pointer;
+            typedef typename allocator_type::const_pointer                  const_pointer;
+            typedef ft::It<value_type>                                      iterator;
+            typedef ft::It<const value_type>                                const_iterator;
+            typedef ft::reverse_iterator<value_type>                        reverse_iterator;
+            typedef ft::reverse_iterator<const value_type>                  const_reverse_iterator;
+            typedef typename ft::iterator_traits<iterator>::difference_type difference_type;
+            typedef size_t                                                  size_type;
 
             //------------------- Member functions : Constructors & Destructor + operator = -------------------//
             explicit vector(const allocator_type& alloc = allocator_type()): _base(alloc), _size(0), _maxSize(0) //Default constructor
@@ -37,17 +37,14 @@ namespace ft
                 for (size_t a = 0; a < n; a++)
                     this->_base.construct(_ptr + a, val);
             }
-            template <class InputIterator>
-            //vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) //Range constructor
-            //{
-                ///////////
-            //}
+            //template <class InputIterator>
+            //vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {} //Range constructor
             vector(const vector& x): _base(x._base), _size(x._size), _maxSize(x._maxSize) //Copy constructor
             {
                 this->_ptr = this->_base.allocate(0);
                 *this = x;
             }
-            vector& operator=(const vector& x)
+            vector& operator=(const vector& x) //Assignation operator
             {
                 if (this != &x)
                 {
@@ -68,10 +65,10 @@ namespace ft
             }
 
             //------------------- Member functions : Iterators -------------------//
-            //iterator begin() {} //Return iterator to beginning
-            //const_iterator begin() const {} //Return iterator to beginning
-            //iterator end() {} //Return iterator to end
-            //const_iterator end() const {} //Return iterator to end
+            iterator begin() { return (iterator(this->_ptr)); } //Return iterator to beginning
+            const_iterator begin() const { return (const_iterator(this->_ptr)); } //Return iterator to beginning
+            iterator end() { return (iterator(this->_ptr + this->_size)); } //Return iterator to end
+            const_iterator end() const { return (const_iterator(this->_ptr + this->_size)); } //Return iterator to end
             //reverse_iterator rbegin() {} //Return reverse iterator to reverse beginning
             //const_reverse_iterator rbegin() const {} //Return reverse iterator to reverse beginning
             //reverse_iterator rend() {} //Return reverse iterator to reverse end
@@ -142,7 +139,12 @@ namespace ft
             //------------------- Member functions : Modifiers -------------------//
             //template <class InputIterator>
             //void assign(InputIterator first, InputIterator last) {} //Assign vector content 
-            //void assign(size_type n, const value_type& val) {} //Assign vector content 
+            void assign(size_type n, const value_type& val) //Assign vector content
+            {
+                clear();
+                for (size_t a = 0; a < n; a++)
+                    push_back(val);
+            } 
             void push_back(const value_type& val) { resize(this->_size + 1, val); } //Add element at the end
             void pop_back() { resize(this->_size - 1, value_type()); } //Delete last element
             //iterator insert(iterator position, const value_type& val) {} //Insert elements
