@@ -85,10 +85,10 @@ namespace ft
             pointer operator->() const { return &(reverse_iterator::operator*()); }
             reference operator[](difference_type n) const { return *(*this + n); }
             iterator_type base() const { return (this->current); }
-            reverse_iterator& operator++() { --current; return (*this); }
-            reverse_iterator& operator--() { ++current; return (*this); }
-            reverse_iterator operator++(int) { reverse_iterator temp = *this; --current; return temp; }
-            reverse_iterator operator--(int) { reverse_iterator temp = *this; ++current; return temp; }
+            reverse_iterator& operator++() { this->current--; return (*this); }
+            reverse_iterator& operator--() { this->current++; return (*this); }
+            reverse_iterator operator++(int) { reverse_iterator temp = *this; this->current--; return temp; }
+            reverse_iterator operator--(int) { reverse_iterator temp = *this; this->current++; return temp; }
             reverse_iterator operator+(difference_type n) const { return reverse_iterator(current - n); }
             reverse_iterator operator-(difference_type n) const { return reverse_iterator(current + n); }
             reverse_iterator& operator+=(difference_type n) { this->current -= n; return (*this); }
@@ -111,8 +111,8 @@ namespace ft
             It(pointer ptr = nullptr): _ptr(ptr) {}
             ~It() { _ptr = nullptr; }
 
-            reference operator*() const { return (*this->_ptr); }
-            pointer operator->() const { return (this->_ptr); }
+            reference operator*() const { return (*this->_ptr); }                          //// Maybe false
+            pointer operator->() const { return (this->_ptr); }                            //// Maybe false
             It& operator++() { this->_ptr++; return (*this); }
             It operator++(int) { It tmp = *this; ++(*this); return (tmp); }
             It& operator+=(difference_type n) { this->_ptr += n; return (*this); }         //// Maybe false
@@ -121,24 +121,24 @@ namespace ft
             It operator-(difference_type n) const { It tmp = *this; return (tmp -= n); }
             It& operator--() { this->_ptr--; return (*this); }
             It  operator--(int) { It tmp = *this; --(*this); return (tmp); }
-            reference operator[](difference_type n) const { return *(this->_ptr + n); }
+            reference operator[](difference_type n) const { return *(this->_ptr + n); }    //// Maybe false
 
         private:
             T* _ptr;
     };
 
     //------------------- Reverse iterator non-member functions -------------------//
-    template< class Iterator1, class Iterator2 >
+    template < class Iterator1, class Iterator2 >
     bool operator==(const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() == rhs.base()); }
-    template< class Iterator1, class Iterator2 >
+    template < class Iterator1, class Iterator2 >
     bool operator!=(const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() != rhs.base()); }
-    template< class Iterator1, class Iterator2 >
+    template < class Iterator1, class Iterator2 >
     bool operator<(const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() > rhs.base()); }
-    template< class Iterator1, class Iterator2 >
+    template < class Iterator1, class Iterator2 >
     bool operator<=(const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() >= rhs.base()); }
-    template< class Iterator1, class Iterator2 >
+    template < class Iterator1, class Iterator2 >
     bool operator>(const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() < rhs.base()); }
-    template< class Iterator1, class Iterator2 >
+    template < class Iterator1, class Iterator2 >
     bool operator>=(const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() <= rhs.base()); }
 
     //-------------------- It non-member functions --------------------//
