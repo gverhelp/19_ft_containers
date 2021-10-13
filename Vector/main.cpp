@@ -4,6 +4,7 @@
 
 int main()
 {
+
     std::cout << std::endl << "//-------------------- Default constructor / push_back / resize / front / back --------------------//" << std::endl;
     ft::vector<int> v1;
 
@@ -40,14 +41,17 @@ int main()
 
     std::cout << "//-------------------- Iterator : begin / end --------------------//" << std::endl;
     ft::vector<int>::iterator it;
-    ft::vector<int>::iterator ite;
     int a = 0;
 
-    v2.assign(5, 12);
-    for (it = v2.begin(); it != (ite = v2.end()); it++)
-        *it = a++;                                                                  //// Not working, why?
-    for (it = v2.begin(); it != (ite = v2.end()); it++)
-        std::cout << "(v2) Element : " << *it << std::endl;
+    v2.assign(5, 0);
+    for (it = v2.begin(); it != v2.end(); it++)
+        *it = a++;                                                             //// Not working, why?
+    a = 0;
+    for (it = v2.begin(); it != v2.end(); it++)
+    {
+        std::cout << "(v2) Element " << a++ << " : " << *it << std::endl;
+    }
+    std::cout << "(v2) Size : " << v2.size() << std::endl;
 
 
 //    std::cout << "//-------------------- Iterator : rbegin / rend --------------------//" << std::endl;

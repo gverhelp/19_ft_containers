@@ -2,7 +2,6 @@
 # define VECTOR_HPP
 
 # include <memory>
-//# include <iterator> //Remplacer par iterator.hpp
 # include "iterator.hpp"
 # include <iostream>
 
