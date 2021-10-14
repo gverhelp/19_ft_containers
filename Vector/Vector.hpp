@@ -20,8 +20,8 @@ namespace ft
             typedef typename allocator_type::const_pointer                  const_pointer;
             typedef ft::It<value_type>                                      iterator;
             typedef ft::It<const value_type>                                const_iterator;
-            typedef ft::reverse_iterator<value_type>                        reverse_iterator;
-            typedef ft::reverse_iterator<const value_type>                  const_reverse_iterator;
+            typedef ft::reverse_iterator<iterator>                          reverse_iterator;
+            typedef ft::reverse_iterator<const_iterator>                    const_reverse_iterator;
             typedef typename ft::iterator_traits<iterator>::difference_type difference_type;
             typedef size_t                                                  size_type;
 
@@ -68,10 +68,10 @@ namespace ft
             const_iterator begin() const { return (const_iterator(this->_ptr)); } //Return iterator to beginning
             iterator end() { return (iterator(this->_ptr + this->_size)); } //Return iterator to end
             const_iterator end() const { return (const_iterator(this->_ptr + this->_size)); } //Return iterator to end
-            //reverse_iterator rbegin() {} //Return reverse iterator to reverse beginning
-            //const_reverse_iterator rbegin() const {} //Return reverse iterator to reverse beginning
-            //reverse_iterator rend() {} //Return reverse iterator to reverse end
-            //const_reverse_iterator rend() const {} //Return reverse iterator to reverse end
+            reverse_iterator rbegin() { return (reverse_iterator(this->_ptr + this->_size)); } //Return reverse iterator to reverse beginning
+            const_reverse_iterator rbegin() const { return (const_reverse_iterator(this->_ptr + this->_size)); } //Return reverse iterator to reverse beginning
+            reverse_iterator rend() { return (reverse_iterator(this->_ptr)); } //Return reverse iterator to reverse end
+            const_reverse_iterator rend() const { return (const_reverse_iterator(this->_ptr)); } //Return reverse iterator to reverse end
 
             //------------------- Member functions : Capacity -------------------//
             size_type size() const { return (this->_size); } //Return size
@@ -137,7 +137,7 @@ namespace ft
 
             //------------------- Member functions : Modifiers -------------------//
             //template <class InputIterator>
-            //void assign(InputIterator first, InputIterator last) {} //Assign vector content 
+            //void assign(InputIterator first, InputIterator last) {} //Assign vector content
             void assign(size_type n, const value_type& val) //Assign vector content
             {
                 clear();

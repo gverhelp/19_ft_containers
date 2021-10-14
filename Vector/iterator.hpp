@@ -75,9 +75,9 @@ namespace ft
             //------------------- Member functions : Constructors + operator = -------------------//
             reverse_iterator(): current() {}
             explicit reverse_iterator(iterator_type x): current(x) {}
-            template <class U>
+            template < class U >
             reverse_iterator(const reverse_iterator<U>& other): current(other.current) {}
-            template< class U >
+            template < class U >
             reverse_iterator& operator=(const reverse_iterator<U>& other) { this->current = other.current; }
 
             //------------------- Member functions -------------------//
@@ -102,15 +102,18 @@ namespace ft
     class It
     {
         public:
+            //------------------- Member types -------------------//
             typedef typename ft::iterator_traits<T*>::iterator_category   iterator_category;
             typedef typename ft::iterator_traits<T*>::value_type          value_type;
             typedef typename ft::iterator_traits<T*>::difference_type     difference_type;
             typedef typename ft::iterator_traits<T*>::pointer             pointer;
             typedef typename ft::iterator_traits<T*>::reference           reference;
 
+            //------------------- Member functions : Constructors / Destructor -------------------//
             It(pointer ptr = nullptr): _ptr(ptr) {}
             ~It() { _ptr = nullptr; }
 
+            //------------------- Member functions -------------------//
             reference operator*() const { return (*this->_ptr); }                          //// Maybe false
             pointer operator->() const { return (this->_ptr); }                            //// Maybe false
             It& operator++() { this->_ptr++; return (*this); }
@@ -123,8 +126,10 @@ namespace ft
             It  operator--(int) { It tmp = *this; --(*this); return (tmp); }
             reference operator[](difference_type n) const { return *(this->_ptr + n); }    //// Maybe false
 
+            pointer getPtr() const { return (this->_ptr); }
+
         private:
-            T* _ptr;
+            pointer _ptr;
     };
 
     //------------------- Reverse iterator non-member functions -------------------//
@@ -143,17 +148,17 @@ namespace ft
 
     //-------------------- It non-member functions --------------------//
     template < class T >
-    bool operator==(const ft::It<T>& lhs, const ft::It<T> rhs) { return (*lhs == *rhs); }
+    bool operator==(const ft::It<T>& lhs, const ft::It<T> rhs) { return (lhs.getPtr() == rhs.getPtr()); }
     template < class T >
-    bool operator!=(const ft::It<T>& lhs, const ft::It<T> rhs) { return (*lhs != *rhs); }
+    bool operator!=(const ft::It<T>& lhs, const ft::It<T> rhs) { return (lhs.getPtr() != rhs.getPtr()); }
     template < class T >
-    bool operator<(const ft::It<T>& lhs, const ft::It<T> rhs) { return (*lhs < *rhs); }
+    bool operator<(const ft::It<T>& lhs, const ft::It<T> rhs) { return (lhs.getPtr() < rhs.getPtr()); }
     template < class T >
-    bool operator<=(const ft::It<T>& lhs, const ft::It<T> rhs) { return (*lhs <= *rhs); }
+    bool operator<=(const ft::It<T>& lhs, const ft::It<T> rhs) { return (lhs.getPtr() <= rhs.getPtr()); }
     template < class T >
-    bool operator>(const ft::It<T>& lhs, const ft::It<T> rhs) { return (*lhs > *rhs); }
+    bool operator>(const ft::It<T>& lhs, const ft::It<T> rhs) { return (lhs.getPtr() > rhs.getPtr()); }
     template < class T >
-    bool operator>=(const ft::It<T>& lhs, const ft::It<T> rhs) { return (*lhs >= *rhs); }
+    bool operator>=(const ft::It<T>& lhs, const ft::It<T> rhs) { return (lhs.getPtr() >= rhs.getPtr()); }
 }
 
 #endif
