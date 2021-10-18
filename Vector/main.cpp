@@ -4,7 +4,7 @@
 
 int main()
 {
-    ft::vector<int> v1;
+    ft::vector<int> v1(5, 6);
     ft::vector<int>::iterator it;
     ft::vector<int>::reverse_iterator rit;
     int a = 0;
