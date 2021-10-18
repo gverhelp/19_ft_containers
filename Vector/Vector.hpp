@@ -2,8 +2,9 @@
 # define VECTOR_HPP
 
 # include <memory>
-# include "iterator.hpp"
 # include <iostream>
+# include "iterator.hpp"
+# include "utils.hpp"
 
 namespace ft
 {
@@ -34,10 +35,21 @@ namespace ft
             {
                 this->_ptr = this->_base.allocate(n);
                 for (size_t a = 0; a < n; a++)
-                    this->_base.construct(_ptr + a, val);
+                    this->_base.construct(this->_ptr + a, val);
             }
-            //template <class InputIterator>
-            //vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {} //Range constructor
+            template <class InputIterator>
+            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()): _base(alloc), _size(0), _maxSize(0) //Range constructor
+            {
+                for (; first < last; first++)
+                {
+                    this->_size++;
+                    this->_maxSize++;                                     ///////////// _maxSize is not correct in this case, how to find it?
+                }
+                first -= _size;
+                this->_ptr = this->_base.allocate(this->_size);
+                for (size_t a = 0; a < this->_size; a++)
+                    this->_base.construct(_ptr + a, *first);
+            }
             vector(const vector& x): _base(x._base), _size(x._size), _maxSize(x._maxSize)
             {
                 this->_ptr = this->_base.allocate(0);
@@ -192,12 +204,10 @@ namespace ft
     }
     template <class T, class Alloc>
     bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs == rhs)); }
-
-    /////// std::lexicographical_compare
     template <class T, class Alloc>
     bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
     {
-        return (std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); ///////////////// have to rewrite this function
+        return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
     }
     template <class T, class Alloc>
     bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(rhs < lhs)); }
