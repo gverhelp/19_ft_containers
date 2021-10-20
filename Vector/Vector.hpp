@@ -37,7 +37,7 @@ namespace ft
                 for (size_t a = 0; a < n; a++)
                     this->_base.construct(this->_ptr + a, val);
             }
-/*            template <class InputIterator>
+/*            template <class InputIterator, std::enable_if<std::is_ >
             vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()): _base(alloc), _size(0), _maxSize(0) //Range constructor
             {
                 for (; first < last; first++)

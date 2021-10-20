@@ -13,51 +13,47 @@ namespace ft
     struct random_acces_iterator_tag {};
 
     template < class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
-    class iterator
+    struct iterator
     {
-        public:
-            //------------------- Member types -------------------//
-            typedef Category    iterator_category;
-            typedef T           value_type;
-            typedef Distance    difference_type;
-            typedef Pointer     pointer;
-            typedef Reference   reference;
+        //------------------- Member types -------------------//
+        typedef Category    iterator_category;
+        typedef T           value_type;
+        typedef Distance    difference_type;
+        typedef Pointer     pointer;
+        typedef Reference   reference;
     };
 
     template < class Iterator >
-    class iterator_traits
+    struct iterator_traits
     {
-        public:
-            //------------------- Member types -------------------//
-            typedef typename Iterator::difference_type   difference_type;
-            typedef typename Iterator::value_type        value_type;
-            typedef typename Iterator::pointer           pointer;
-            typedef typename Iterator::reference         reference;
-            typedef typename Iterator::iterator_category iterator_category;
+        //------------------- Member types -------------------//
+        typedef typename Iterator::difference_type   difference_type;
+        typedef typename Iterator::value_type        value_type;
+        typedef typename Iterator::pointer           pointer;
+        typedef typename Iterator::reference         reference;
+        typedef typename Iterator::iterator_category iterator_category;
     };
 
     template < class T >
-    class iterator_traits<T*>
+    struct iterator_traits<T*>
     {
-        public:
-            //------------------- Member types -------------------//
-            typedef ptrdiff_t                       difference_type;
-            typedef T                               value_type;
-            typedef T*                              pointer;
-            typedef T&                              reference;
-            typedef std::random_access_iterator_tag iterator_category;
+        //------------------- Member types -------------------//
+        typedef ptrdiff_t                       difference_type;
+        typedef T                               value_type;
+        typedef T*                              pointer;
+        typedef T&                              reference;
+        typedef std::random_access_iterator_tag iterator_category;
     };
 
     template < class T >
-    class iterator_traits<const T*>
+    struct iterator_traits<const T*>
     {
-        public:
-            //------------------- Member types -------------------//
-            typedef ptrdiff_t                       difference_type;
-            typedef T                               value_type;
-            typedef const T*                        pointer;
-            typedef const T&                        reference;
-            typedef std::random_access_iterator_tag iterator_category;
+        //------------------- Member types -------------------//
+        typedef ptrdiff_t                       difference_type;
+        typedef T                               value_type;
+        typedef const T*                        pointer;
+        typedef const T&                        reference;
+        typedef std::random_access_iterator_tag iterator_category;
     };
 
     template < class Iterator >
@@ -78,7 +74,12 @@ namespace ft
             template < class U >
             reverse_iterator(const reverse_iterator<U>& other): current(other.current) {}
             template < class U >
-            reverse_iterator& operator=(const reverse_iterator<U>& other) { this->current = other.current; }
+            reverse_iterator& operator=(const reverse_iterator<U>& other)
+            {
+                if (this != &other)
+                    this->current = other.current;
+                return (*this);
+            }
 
             //------------------- Member functions -------------------//
             reference operator*() const { Iterator tmp = this->current; return *--tmp; }
@@ -112,19 +113,26 @@ namespace ft
             //------------------- Member functions : Constructors / Destructor -------------------//
             It(pointer ptr = nullptr): _ptr(ptr) {}
             ~It() { _ptr = nullptr; }
+            template < class U >
+            It& operator=(const It<U>& copy)                  ////// template maybe not necessary
+            {
+                if (this != &copy)
+                    this->_ptr = copy._ptr;
+                return (*this);
+            } 
 
             //------------------- Member functions -------------------//
-            reference operator*() const { return (*this->_ptr); }                          //// Maybe false
-            pointer operator->() const { return (this->_ptr); }                            //// Maybe false
+            reference operator*() const { return (*this->_ptr); }
+            pointer operator->() const { return (this->_ptr); }
             It& operator++() { this->_ptr++; return (*this); }
             It operator++(int) { It tmp = *this; ++(*this); return (tmp); }
-            It& operator+=(difference_type n) { this->_ptr += n; return (*this); }         //// Maybe false
+            It& operator+=(difference_type n) { this->_ptr += n; return (*this); }
             It operator+(difference_type n) const { It tmp = *this; return (tmp += n); }
             It& operator-=(difference_type n) { this->_ptr -= n; return (*this); }
             It operator-(difference_type n) const { It tmp = *this; return (tmp -= n); }
             It& operator--() { this->_ptr--; return (*this); }
             It  operator--(int) { It tmp = *this; --(*this); return (tmp); }
-            reference operator[](difference_type n) const { return *(this->_ptr + n); }    //// Maybe false
+            reference operator[](difference_type n) const { return *(this->_ptr + n); }
 
             pointer getPtr() const { return (this->_ptr); }
 
