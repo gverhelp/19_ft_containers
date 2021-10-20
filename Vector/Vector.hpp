@@ -37,19 +37,20 @@ namespace ft
                 for (size_t a = 0; a < n; a++)
                     this->_base.construct(this->_ptr + a, val);
             }
-            template <class InputIterator>
+/*            template <class InputIterator>
             vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()): _base(alloc), _size(0), _maxSize(0) //Range constructor
             {
                 for (; first < last; first++)
                 {
                     this->_size++;
-                    this->_maxSize++;                                     ///////////// _maxSize is not correct in this case, how to find it?
+                    this->_maxSize = (last - first) / sizeof(value_type);                                     ///////////// _maxSize is not correct in this case, how to find it?
                 }
                 first -= _size;
                 this->_ptr = this->_base.allocate(this->_size);
                 for (size_t a = 0; a < this->_size; a++)
                     this->_base.construct(_ptr + a, *first);
             }
+*/
             vector(const vector& x): _base(x._base), _size(x._size), _maxSize(x._maxSize)
             {
                 this->_ptr = this->_base.allocate(0);
@@ -163,7 +164,7 @@ namespace ft
             //template <class InputIterator>
             //void insert(iterator position, InputIterator first, InputIterator last) {} //Insert elements
             //iterator erase(iterator position) {} //Erase elements 
-            //iterator erase(iterator first, iterator last) {} //Erase elements 
+            //iterator erase(iterator first, iterator last) {} //Erase elements
             void swap(vector& x)
             {
                 vector tmp;
