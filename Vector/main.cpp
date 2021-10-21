@@ -43,6 +43,7 @@ int main()
 
     print_container(v2, "v2");
     v1.clear();
+    //v2.clear();
 
 
     std::cout << std::endl << "//-------------------------------------------------------//";
@@ -50,8 +51,17 @@ int main()
     std::cout << std::endl << "//-------------------------------------------------------//" << std::endl;
     v1.assign(4, 25);
     v2.assign(5, 42);
+    ft::vector<int>::iterator it1 = v1.begin();
+    ft::vector<int>::iterator it2 = v2.begin();
+
 //    v2.assign(v2.begin() + 1, v2.end() - 1);
+    print_container(v1, "v1");
+    print_container(v2, "v2");
+    std::cout << *it1 << std::endl;
+    std::cout << *it2 << std::endl;
     v1.swap(v2);
+    std::cout << *it1 << std::endl;
+    std::cout << *it2 << std::endl;
     print_container(v1, "v1");
     print_container(v2, "v2");
     v1.clear();
@@ -71,6 +81,7 @@ int main()
         std::cout << "(v2) Element " << a++ << " : " << *it << std::endl;
     std::cout << "(v2) Size : " << v2.size() << std::endl;
     a = 0;
+    v2.clear();
 
 
     std::cout << std::endl << "//------------------------------------------------------------------//";
@@ -88,5 +99,16 @@ int main()
     v1.clear();
     a = 0;
 
+/*
+    std::cout << std::endl << "//-----------------------------------------------//";
+    std::cout << std::endl << "//-------------------- Erase --------------------//";
+    std::cout << std::endl << "//-----------------------------------------------//" << std::endl;
+    for (a = 0; a < 10; a++)
+        v1.push_back(a);
+    print_container(v1, "v1");
+
+    v1.erase(v1.begin() + 2);
+    print_container(v1, "v1");
+*/
     return (0);
 }

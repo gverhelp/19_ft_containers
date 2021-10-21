@@ -37,7 +37,7 @@ namespace ft
                 for (size_t a = 0; a < n; a++)
                     this->_base.construct(this->_ptr + a, val);
             }
-/*            template <class InputIterator, std::enable_if<std::is_ >
+ /*           template <class InputIterator, std::enable_if<std::is_ >
             vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()): _base(alloc), _size(0), _maxSize(0) //Range constructor
             {
                 for (; first < last; first++)
@@ -156,22 +156,30 @@ namespace ft
                 clear();
                 for (size_t a = 0; a < n; a++)
                     push_back(val);
-            } 
+            }
             void push_back(const value_type& val) { resize(this->_size + 1, val); }
             void pop_back() { resize(this->_size - 1, value_type()); }
             //iterator insert(iterator position, const value_type& val) {} //Insert elements
             //void insert(iterator position, size_type n, const value_type& val) {} //Insert elements
             //template <class InputIterator>
             //void insert(iterator position, InputIterator first, InputIterator last) {} //Insert elements
-            //iterator erase(iterator position) {} //Erase elements 
+            //iterator erase(iterator position) {} //Erase element
             //iterator erase(iterator first, iterator last) {} //Erase elements
             void swap(vector& x)
             {
-                vector tmp;
-                tmp = *this;
+                pointer tmp;
+                size_t  tmp2;
+                size_t  tmp3;
 
-                *this = x;
-                x = tmp;
+                tmp = this->_ptr;
+                tmp2 = this->_size;
+                tmp3 = this->_maxSize;
+                this->_ptr = x._ptr;
+                this->_size = x._size;
+                this->_maxSize = x._maxSize;
+                x._ptr = tmp;
+                x._size = tmp2;
+                x._maxSize = tmp3;
             }
             void clear()
             {
@@ -206,10 +214,7 @@ namespace ft
     template <class T, class Alloc>
     bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs == rhs)); }
     template <class T, class Alloc>
-    bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-    {
-        return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
-    }
+    bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
     template <class T, class Alloc>
     bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(rhs < lhs)); }
     template <class T, class Alloc>
