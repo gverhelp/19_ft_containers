@@ -99,16 +99,23 @@ int main()
     v1.clear();
     a = 0;
 
-/*
+
     std::cout << std::endl << "//-----------------------------------------------//";
     std::cout << std::endl << "//-------------------- Erase --------------------//";
     std::cout << std::endl << "//-----------------------------------------------//" << std::endl;
+    std::vector<int> v3;
+
     for (a = 0; a < 10; a++)
         v1.push_back(a);
+    for (a = 0; a < 10; a++)
+        v3.push_back(a);
     print_container(v1, "v1");
+    it = v1.erase(v1.begin() + 1, v1.begin() + 6);
+    std::cout << *it << std::endl;
+    std::cout << *(v3.erase(v3.begin() + 1, v3.begin() + 6)) << std::endl;
+//    std::cout << *(v3.erase(v3.end())) << std::endl;         //// why is this segfaulting? Mine is functional
+    print_container(v1, "v1");
+    print_container(v3, "v3");
 
-    v1.erase(v1.begin() + 2);
-    print_container(v1, "v1");
-*/
     return (0);
 }

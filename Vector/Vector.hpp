@@ -163,8 +163,37 @@ namespace ft
             //void insert(iterator position, size_type n, const value_type& val) {} //Insert elements
             //template <class InputIterator>
             //void insert(iterator position, InputIterator first, InputIterator last) {} //Insert elements
-            //iterator erase(iterator position) {} //Erase element
-            //iterator erase(iterator first, iterator last) {} //Erase elements
+            iterator erase(iterator position) //Erase element
+            {
+                iterator it;
+                size_t a = 0;
+
+                this->_size--;
+                for (it = this->begin(); it < position; it++)
+                    a++;
+                for (; a < this->_size; a++)
+                    this->_ptr[a] = this->_ptr[a + 1];
+                if (position == this->end() + 1)
+                    return (this->end());
+                return (position);
+            }
+            iterator erase(iterator first, iterator last) //Erase elements
+            {
+                iterator it;
+                size_t a = 0;
+                size_t b = 0;
+                size_t c = 0;
+
+                for (it = this->begin(); it < first; it++)
+                    a++;
+                for (it = this->begin(); it < last; it++)
+                    b++;
+                c = b - a;
+                this->_size -= c;
+                for (; a < this->_size; a++)
+                    this->_ptr[a] = this->_ptr[a + c];
+                return (last - c);
+            }
             void swap(vector& x)
             {
                 pointer tmp;
