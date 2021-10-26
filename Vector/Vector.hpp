@@ -201,7 +201,7 @@ namespace ft
             }
             iterator erase(iterator first, iterator last) //Erase elements
             {
-/*
+
                 iterator it;
                 size_t a = 0;
                 size_t b = 0;
@@ -216,7 +216,7 @@ namespace ft
                 for (; a < this->_size; a++)
                     this->_ptr[a] = this->_ptr[a + c];
                 return (last - c);
-*/
+/*
                 vector tmp;
                 iterator it;
                 size_t a = 0;
@@ -240,6 +240,7 @@ namespace ft
                 this->_size = tmp._size;
                 this->_maxSize = tmp._maxSize;
                 return (last - c);
+*/
             }
             void swap(vector& x)
             {
