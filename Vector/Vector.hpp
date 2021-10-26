@@ -165,6 +165,7 @@ namespace ft
             //void insert(iterator position, InputIterator first, InputIterator last) {} //Insert elements
             iterator erase(iterator position) //Erase element
             {
+/*
                 iterator it;
                 size_t a = 0;
 
@@ -176,9 +177,31 @@ namespace ft
                 if (position == this->end() + 1)
                     return (this->end());
                 return (position);
+*/
+                iterator it;
+                vector tmp;
+                size_t a = 0;
+                size_t b = 0;
+
+                if (position == this->end())
+                    return (this->end());
+                tmp = *this;
+                tmp._size--;
+                this->clear();
+                for (it = tmp.begin(); it < position; it++)
+                    a++;
+                for (; b < tmp._size; b++)
+                {
+                    if (b != a)
+                        this->_base.construct(this->_ptr + b, *(tmp._ptr + b));
+                }
+                this->_size = tmp._size;
+                this->_maxSize = tmp._maxSize;
+                return (position);
             }
             iterator erase(iterator first, iterator last) //Erase elements
             {
+/*
                 iterator it;
                 size_t a = 0;
                 size_t b = 0;
@@ -192,6 +215,30 @@ namespace ft
                 this->_size -= c;
                 for (; a < this->_size; a++)
                     this->_ptr[a] = this->_ptr[a + c];
+                return (last - c);
+*/
+                vector tmp;
+                iterator it;
+                size_t a = 0;
+                size_t b = 0;
+                size_t c = 0;
+                size_t d = 0;
+
+                tmp = *this;
+                for (it = tmp.begin(); it < first; it++)
+                    a++;
+                for (it = tmp.begin(); it < last; it++)
+                    b++;
+                c = b - a;
+                tmp._size -= c;
+                d = a;
+                for (; a < tmp._size; a++)
+                {
+                    if (a < d || a > b)
+                        this->_base.construct(this->_ptr + a, *(tmp._ptr + a));
+                }
+                this->_size = tmp._size;
+                this->_maxSize = tmp._maxSize;
                 return (last - c);
             }
             void swap(vector& x)
