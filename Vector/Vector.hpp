@@ -37,20 +37,18 @@ namespace ft
                 for (size_t a = 0; a < n; a++)
                     this->_base.construct(this->_ptr + a, val);
             }
- /*           template <class InputIterator, std::enable_if<std::is_ >
-            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()): _base(alloc), _size(0), _maxSize(0) //Range constructor
+            template <class InputIterator>
+            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr): _base(alloc), _size(0), _maxSize(0) //Range constructor
             {
                 for (; first < last; first++)
-                {
                     this->_size++;
-                    this->_maxSize = (last - first) / sizeof(value_type);                                     ///////////// _maxSize is not correct in this case, how to find it?
-                }
+                this->_maxSize = this->_size;
                 first -= _size;
                 this->_ptr = this->_base.allocate(this->_size);
                 for (size_t a = 0; a < this->_size; a++)
-                    this->_base.construct(_ptr + a, *first);
+                    this->_base.construct(_ptr + a, *(first + a));
             }
-*/
+
             vector(const vector& x): _base(x._base), _size(x._size), _maxSize(x._maxSize)
             {
                 this->_ptr = this->_base.allocate(0);
@@ -149,8 +147,13 @@ namespace ft
             const_reference back() const { return *(this->_ptr + this->_size - 1); }
 
             //------------------- Member functions : Modifiers -------------------//
-            //template <class InputIterator>
-            //void assign(InputIterator first, InputIterator last) {} //Assign vector content
+            template <class InputIterator>
+            void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr) //Assign vector content
+            {
+                clear();
+                insert(begin(), first, last);
+                this->_maxSize = _size;
+            }
             void assign(size_type n, const value_type& val)
             {
                 clear();
@@ -159,10 +162,45 @@ namespace ft
             }
             void push_back(const value_type& val) { resize(this->_size + 1, val); }
             void pop_back() { resize(this->_size - 1, value_type()); }
-            //iterator insert(iterator position, const value_type& val) {} //Insert elements
-            //void insert(iterator position, size_type n, const value_type& val) {} //Insert elements
-            //template <class InputIterator>
-            //void insert(iterator position, InputIterator first, InputIterator last) {} //Insert elements
+            iterator insert(iterator position, const value_type& val) //Insert elements
+            {
+                iterator it;
+                size_t a = 0;
+                size_t i = 0;
+
+                for (it = this->begin(); it < position; it++)
+                    a++;
+                this->reserve(this->_size + 1);
+                this->_size += 1;
+                i = this->_size - 1;
+                while (i > a)
+                {
+                    this->_ptr[i] = this->_ptr[i - 1];
+                    i--;
+                }
+                this->_ptr[a] = val;
+                return (begin() + a);
+            }
+            void insert(iterator position, size_type n, const value_type& val) //Insert elements
+            {
+                iterator it = position;
+                for (size_t a = 0; a < n; a++)
+                {
+                    it = insert(it, val);
+                    it++;
+                }
+            }
+            template <class InputIterator>
+            void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr) //Insert elements
+            {
+                iterator it = position;
+
+                for (; first < last; first++)
+                {
+                    it = insert(it, *first);
+                    it++;
+                }
+            }
             iterator erase(iterator position) //Erase element
             {
 /*
@@ -201,7 +239,6 @@ namespace ft
             }
             iterator erase(iterator first, iterator last) //Erase elements
             {
-
                 iterator it;
                 size_t a = 0;
                 size_t b = 0;
