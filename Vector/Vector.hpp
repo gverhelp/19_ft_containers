@@ -203,7 +203,6 @@ namespace ft
             }
             iterator erase(iterator position) //Erase element
             {
-/*
                 iterator it;
                 size_t a = 0;
 
@@ -215,7 +214,7 @@ namespace ft
                 if (position == this->end() + 1)
                     return (this->end());
                 return (position);
-*/
+/*
                 iterator it;
                 vector tmp;
                 size_t a = 0;
@@ -236,6 +235,7 @@ namespace ft
                 this->_size = tmp._size;
                 this->_maxSize = tmp._maxSize;
                 return (position);
+*/
             }
             iterator erase(iterator first, iterator last) //Erase elements
             {
@@ -253,7 +253,7 @@ namespace ft
                 for (; a < this->_size; a++)
                     this->_ptr[a] = this->_ptr[a + c];
                 return (last - c);
-/*
+/*                                                 ////// Not fonctional
                 vector tmp;
                 iterator it;
                 size_t a = 0;

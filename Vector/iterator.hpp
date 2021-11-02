@@ -98,7 +98,11 @@ namespace ft
         protected:
             iterator_type current;
     };
-        
+    
+    ///////////////////////////////////////////////////////////
+    //////////////////// Iterator : Vector ////////////////////
+    ///////////////////////////////////////////////////////////
+
     template < class T >
     class It
     {
@@ -140,7 +144,83 @@ namespace ft
             pointer _ptr;
     };
 
-    //------------------- Reverse iterator non-member functions -------------------//
+    //-------------------- It non-member functions --------------------//
+    template < class T >
+    bool operator==(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() == rhs.getPtr()); }
+    template < class T >
+    bool operator!=(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() != rhs.getPtr()); }
+    template < class T >
+    bool operator<(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() < rhs.getPtr()); }
+    template < class T >
+    bool operator<=(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() <= rhs.getPtr()); }
+    template < class T >
+    bool operator>(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() > rhs.getPtr()); }
+    template < class T >
+    bool operator>=(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() >= rhs.getPtr()); }
+
+    ////////////////////////////////////////////////////////
+    //////////////////// Iterator : Map ////////////////////
+    ////////////////////////////////////////////////////////
+
+    template < class T >
+    class Itmap
+    {
+        public:
+            //------------------- Member types -------------------//
+            typedef typename ft::iterator_traits<T*>::iterator_category   iterator_category;
+            typedef typename ft::iterator_traits<T*>::value_type          value_type;
+            typedef typename ft::iterator_traits<T*>::difference_type     difference_type;
+            typedef typename ft::iterator_traits<T*>::pointer             pointer;
+            typedef typename ft::iterator_traits<T*>::reference           reference;
+
+            //------------------- Member functions : Constructors / Destructor -------------------//
+            Itmap(pointer ptr = nullptr): _ptr(ptr) {}
+            ~Itmap() { _ptr = nullptr; }
+            template < class U >
+            Itmap& operator=(const Itmap<U>& copy)                  ////// template maybe not necessary
+            {
+                if (this != &copy)
+                    this->_ptr = copy._ptr;
+                return (*this);
+            } 
+
+            //------------------- Member functions -------------------//
+            reference operator*() const { return (*this->_ptr); }
+            pointer operator->() const { return (this->_ptr); }
+            Itmap& operator++() { this->_ptr++; return (*this); }
+            Itmap operator++(int) { Itmap tmp = *this; ++(*this); return (tmp); }
+            Itmap& operator+=(difference_type n) { this->_ptr += n; return (*this); }
+            Itmap operator+(difference_type n) const { Itmap tmp = *this; return (tmp += n); }
+            Itmap& operator-=(difference_type n) { this->_ptr -= n; return (*this); }
+            Itmap operator-(difference_type n) const { Itmap tmp = *this; return (tmp -= n); }
+            Itmap& operator--() { this->_ptr--; return (*this); }
+            Itmap  operator--(int) { Itmap tmp = *this; --(*this); return (tmp); }
+            reference operator[](difference_type n) const { return *(this->_ptr + n); }
+
+            pointer getPtr() const { return (this->_ptr); }
+
+        private:
+            pointer _ptr;
+    };
+
+    //-------------------- Itmap non-member functions --------------------//
+    template < class T >
+    bool operator==(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.getPtr() == rhs.getPtr()); }
+    template < class T >
+    bool operator!=(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.getPtr() != rhs.getPtr()); }
+    template < class T >
+    bool operator<(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.getPtr() < rhs.getPtr()); }
+    template < class T >
+    bool operator<=(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.getPtr() <= rhs.getPtr()); }
+    template < class T >
+    bool operator>(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.getPtr() > rhs.getPtr()); }
+    template < class T >
+    bool operator>=(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.getPtr() >= rhs.getPtr()); }
+
+    /////////////////////////////////////////////////////////////////////////////////
+    //////////////////// Reverse iterator : non-member functions ////////////////////
+    /////////////////////////////////////////////////////////////////////////////////
+
     template < class Iterator >
     bool operator==(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator>& rhs) { return (lhs.base() == rhs.base()); }
     template < class Iterator >
@@ -157,20 +237,6 @@ namespace ft
     reverse_iterator<Iterator> operator+(typename reverse_iterator<Iterator>::difference_type n, const reverse_iterator<Iterator>& it) { return (reverse_iterator<Iterator>(it.base() - n)); }
     template <class Iterator>
     typename reverse_iterator<Iterator>::difference_type operator-(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs) { return (rhs.base() - lhs.base()); }
-
-    //-------------------- It non-member functions --------------------//
-    template < class T >
-    bool operator==(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() == rhs.getPtr()); }
-    template < class T >
-    bool operator!=(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() != rhs.getPtr()); }
-    template < class T >
-    bool operator<(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() < rhs.getPtr()); }
-    template < class T >
-    bool operator<=(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() <= rhs.getPtr()); }
-    template < class T >
-    bool operator>(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() > rhs.getPtr()); }
-    template < class T >
-    bool operator>=(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() >= rhs.getPtr()); }
 }
 
 #endif

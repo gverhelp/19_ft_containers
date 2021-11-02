@@ -113,7 +113,7 @@ int main()
     print_container(v3, "v3");
     it = v1.erase(v1.begin() + 2, v1.begin() + 7);
     std::cout << *it << std::endl;
-//    std::cout << *(v3.erase(v3.begin() + 1, v3.begin() + 3)) << std::endl;
+    std::cout << *(v3.erase(v3.begin() + 2, v3.begin() + 7)) << std::endl;
 //    std::cout << *(v3.erase(v3.end())) << std::endl;         //// why is this segfaulting? Mine is functional
     print_container(v1, "v1");
     print_container(v3, "v3");
