@@ -210,7 +210,7 @@ namespace ft
 				{
 					std::cout<<"Couldn't find key in the tree"<<std::endl;
 					return;
-				} 
+				}
 
 				y = z;
 				int y_original_color = y->color;

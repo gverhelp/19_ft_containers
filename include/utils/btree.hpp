@@ -68,7 +68,7 @@ namespace ft
 				}
                 return (toInsert);
             }
-
+/*
             delete(Node node, const value_type& val)
             {
                 while (node)
@@ -88,7 +88,7 @@ namespace ft
                     
                 }
             }
-
+*/
             search(const value_type& val)
             {
                 pointer tmp = this->root;
@@ -109,10 +109,10 @@ namespace ft
                 return (nullptr);
             }
 
-            fix()
-            {
+//            fix()
+//            {
 
-            }
+//            }
 
         private:
             Node* root;
