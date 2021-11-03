@@ -69,13 +69,13 @@ namespace ft
     //////////////////// ALL ////////////////////
     /////////////////////////////////////////////
 
-	template<bool B, class T = void>
-	struct enable_if {};
+    template<bool B, class T = void>
+    struct enable_if {};
  
-	template<class T>
-	struct enable_if<true, T> { typedef T type; };
+    template<class T>
+    struct enable_if<true, T> { typedef T type; };
 
-	template <class T, T v>
+    template <class T, T v>
     struct integral_constant
     {
         static const T value = v;   // true or false vu qu'on passe un bool

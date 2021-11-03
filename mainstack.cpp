@@ -1,4 +1,4 @@
-#include "./stack.hpp"
+#include "include/stack.hpp"
 #include <vector>
 #include <stack>
 
@@ -19,17 +19,17 @@ int main()
 
     while (!stack.empty())
     {
-        std::cout << ' ' << stack.top();
+        std::cout << "[" << stack.top() << "] ";
         stack.pop();
     }
-    std::cout << "\nStack size : " << stack.size() << std::endl;
+    std::cout << std::endl << "Stack size : " << stack.size() << std::endl;
+    std::cout << "Stack2 size : " << stack2.size() << std::endl;
 
     while (!stack2.empty())
     {
-        std::cout << ' ' << stack2.top();
+        std::cout << "[" << stack2.top() << "] ";
         stack2.pop();
     }
-    std::cout << "\nStack size : " << stack2.size() << std::endl;
-
+    std::cout << "\nStack2 size : " << stack2.size() << std::endl;
     return (0);
 }
