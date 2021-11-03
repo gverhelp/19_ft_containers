@@ -312,7 +312,7 @@ namespace ft
             pointer     _ptr;
     };
 
-    //------------------- Non-member function overloads -------------------//
+    //------------------- Non-member functions -------------------//
     template <class T, class Alloc>
     bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
     {
