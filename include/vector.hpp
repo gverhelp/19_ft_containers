@@ -86,7 +86,7 @@ namespace ft
 
             //------------------- Member functions : Capacity -------------------//
             size_type size() const { return (this->_size); } //Return size
-            size_type max_size() const { return (this->_base.max_size()); } //Return maximum size
+            size_type max_size() const { return (this->_base.max_size()); } //Return maximum size of allocated storage
             void resize(size_type n, value_type val = value_type())
             {
                 if (n < this->_size)
@@ -102,7 +102,7 @@ namespace ft
                 }
                 this->_size = n;
             }
-            size_type capacity() const { return (this->_maxSize); } //Return size of allocated storage capacity
+            size_type capacity() const { return (this->_maxSize); } //Return maximum size 
             bool empty() const
             {
                 if (this->_size == 0)

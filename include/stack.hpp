@@ -41,8 +41,8 @@ namespace ft
             friend bool operator>=(const stack& lhs, const stack& rhs) { return (lhs.C >= rhs.C); }
 
         protected:
-                //------------------- Member object -------------------//
-                container_type C;
+            //------------------- Member object -------------------//
+            container_type C;
     };
 }
 
