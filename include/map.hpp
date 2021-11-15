@@ -62,10 +62,12 @@ namespace ft
             //mapped_type& operator[] (const key_type& k) {}
 
             //------------------- Member functions : Modifiers -------------------//	
+/*
             pair<iterator,bool> insert(const value_type& val)
             {
                 
             }
+*/
             //iterator insert (iterator position, const value_type& val) {}	
             //template <class InputIterator>
             //void insert (InputIterator first, InputIterator last) {}
@@ -101,10 +103,10 @@ namespace ft
             allocator_type get_allocator() const { return (this->_alloc); }
 
         private:
-            allocator_type  _alloc;
-            key_compare     _comp;
-            BTree           _tree;
-            size_type       _size;
+            allocator_type                              _alloc;
+            key_compare                                 _comp;
+            BTree<key_type, mapped_type, value_type>    _tree;
+            size_type                                   _size;
 
     };
 

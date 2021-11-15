@@ -117,6 +117,5 @@ int main()
 //    std::cout << *(v3.erase(v3.end())) << std::endl;         //// why is this segfaulting? Mine is functional
     print_container(v1, "v1");
     print_container(v3, "v3");
-
     return (0);
 }
