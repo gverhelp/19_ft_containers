@@ -2,6 +2,7 @@
 # define BTREE_HPP
 
 # include "utils.hpp"
+# include <iostream>
 # include <memory>
 
 namespace ft
@@ -29,7 +30,7 @@ namespace ft
             typedef T                               value_type;
             typedef Node                            node_type;
             typedef Node*                           node_pointer;
-            typedef Node_Alloc                      node_alloc;
+            typedef Node_Alloc						node_alloc;
             typedef typename node_alloc::pointer    node_alloc_pointer;
 
 			void rbTransplant(node_pointer u, node_pointer v)
@@ -198,7 +199,7 @@ namespace ft
                 }
                 if (parent && (val.first == parent->data.first))
                     return (nullptr);
-                node_pointer toInsert = node_alloc.allocate(1);
+                node_pointer toInsert = node_alloc().allocate(1);
                 toInsert->data.first = val.first;
                 toInsert->data.second = val.second;
                 toInsert->parent = parent;
@@ -280,12 +281,12 @@ namespace ft
                 return (toInsert);
             }
 
-			void delete(node_pointer node, int key)
+			void delete_node(node_pointer node, int key)
 			{
 				// find the node containing key
 				node_pointer z = nullptr;
 				node_pointer x, y;
-				while (node != nulptr)
+				while (node != nullptr)
 				{
 					if (node->data == key)
 					{
