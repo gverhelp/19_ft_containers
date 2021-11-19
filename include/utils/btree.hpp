@@ -23,7 +23,8 @@ namespace ft
     class BTree
     {
         private:
-            Node* root;
+            Node*	root;
+			size_t	_size;
 
         public:
 			typedef Key								key_type;
@@ -33,6 +34,20 @@ namespace ft
             typedef Node_Alloc						node_alloc;
             typedef typename node_alloc::pointer    node_alloc_pointer;
 
+			Btree(): root(nullptr), _size(0) {}
+			~Btree()
+			{
+				this->clear_all();
+			}
+
+			NodePtr minimum(NodePtr node)
+			{
+				while (node->left != nullptr)
+				{
+					node = node->left;
+				}
+				return node;
+			}
 			void rbTransplant(node_pointer u, node_pointer v)
 			{
 				if (u->parent == nullptr)
@@ -200,12 +215,14 @@ namespace ft
                 if (parent && (val.first == parent->data.first))
                     return (nullptr);
                 node_pointer toInsert = node_alloc().allocate(1);
+				node_alloc().construct(toInsert, node_type());
                 toInsert->data.first = val.first;
                 toInsert->data.second = val.second;
                 toInsert->parent = parent;
                 toInsert->left = nullptr;
                 toInsert->right = nullptr;
                 toInsert->color = 1;
+				_size++;
                 if (!this->root)
                 {
 					toInsert->color = 0;
@@ -281,18 +298,18 @@ namespace ft
                 return (toInsert);
             }
 
-			void delete_node(node_pointer node, int key)
+			void delete_node(int key) //node_pointer node,
 			{
 				// find the node containing key
 				node_pointer z = nullptr;
 				node_pointer x, y;
+				node_pointer node = this->root;
 				while (node != nullptr)
 				{
 					if (node->data == key)
 					{
 						z = node;
 					}
-
 					if (node->data <= key)
 					{
 						node = node->right;
@@ -302,13 +319,11 @@ namespace ft
 						node = node->left;
 					}
 				}
-
 				if (z == nullptr)
 				{
 					std::cout << "Couldn't find key in the tree" << std::endl;
 					return;
 				}
-
 				y = z;
 				int y_original_color = y->color;
 				if (z->left == nullptr)
@@ -342,11 +357,15 @@ namespace ft
 					y->left->parent = y;
 					y->color = z->color;
 				}
-				delete z;
+				_size--;
+				node_alloc().destroy(*z);
+				node_alloc().deallocate(z, 1);
+				z = nullptr;
 				if (y_original_color == 0)
 				{
 					fixDelete(x);
 				}
+				
             }
 
             node_pointer search(const key_type& key)
@@ -368,6 +387,49 @@ namespace ft
                 }
                 return (nullptr);
             }
+
+			node_pointer lastNode()
+			{
+				node_pointer last = this->root;
+
+				while (last && last->right != nullptr)
+					last = last->right;
+				return (last);
+			}
+
+			node_pointer firstNode()
+			{
+				node_pointer first = this->root;
+
+				while (first && first->left != nullptr)
+					first = firsy->left;
+				return (first);
+			}
+
+			void clear(node_pointer node)
+			{
+				if (node == nullptr)
+					return ;
+			
+				/* first delete both subtrees */
+				clear(node->left);
+				clear(node->right);
+				
+				/* then delete the node */
+				std::cout << "\n Deleting node: " << node->data;
+				node_alloc().destroy(*node);
+				node_alloc().deallocate(node, 1);
+				node = nullptr;
+			}
+
+			void clear_all()
+			{
+				clear(root);
+			}
+
+			size_t getSize() { return (this->_size); }
+			size_t getMaxSize() { return (allocator_type().max_size()); }
+			node_pointer getRoot() { return (_root); }
     };
 }
 

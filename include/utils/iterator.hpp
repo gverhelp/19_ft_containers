@@ -181,7 +181,8 @@ namespace ft
     ////////////////////////////////////////////////////////
     //////////////////// Iterator : Map ////////////////////
     ////////////////////////////////////////////////////////
-    template < class T >
+/*
+    template < class T, class Compare >
     class Itmap
     {
         public:
@@ -199,7 +200,10 @@ namespace ft
             Itmap& operator=(const Itmap<U>& copy)                  ////// template maybe not necessary
             {
                 if (this != &copy)
-                    this->_ptr = copy._ptr;
+                {
+                    this->_comp = copy._comp;
+                    this->
+                }
                 return (*this);
             } 
 
@@ -217,9 +221,6 @@ namespace ft
             reference operator[](difference_type n) const { return *(this->_ptr + n); }
 
             pointer getPtr() const { return (this->_ptr); }
-
-        private:
-            pointer _ptr;
     };
 
     //-------------------- Itmap non-member functions --------------------//
@@ -235,6 +236,7 @@ namespace ft
     bool operator>(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.getPtr() > rhs.getPtr()); }
     template < class T >
     bool operator>=(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.getPtr() >= rhs.getPtr()); }
+*/
 }
 
 #endif

@@ -133,7 +133,7 @@ namespace ft
             {
                 if (n >= this->_size)
                     throw std::out_of_range("Vector"); 
-                return *(this->_ptr + n);
+                return (*(this->_ptr + n));
             }
             const_reference at(size_type n) const
             {
