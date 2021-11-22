@@ -301,11 +301,11 @@ namespace ft
 			}
 
 	        Itmap operator--(int)
-			{
-				Itmap tmp(*this);
-				operator--();
-				return (tmp);
-			}
+            {
+                Itmap tmp(*this);
+                operator--();
+                return (tmp);
+            }
 	};
 /*
     //-------------------- Itmap non-member functions --------------------//
