@@ -1,6 +1,7 @@
 #ifndef ITERATOR_HPP
 # define ITERATOR_HPP
 
+# include "btree.hpp"
 # include <cstddef>
 # include <iostream>
 
@@ -181,48 +182,132 @@ namespace ft
     ////////////////////////////////////////////////////////
     //////////////////// Iterator : Map ////////////////////
     ////////////////////////////////////////////////////////
+	template < typename T, class Compare >
+	class Itmap 
+	{
+
+	    public:
+	        // ------------------- Member types ------------------- //
+	        // typedef Iterator                                                    iterator_type;
+	        typedef typename ft::iterator_traits< ft::iterator<ft::bidirectionnal_iterator_tag, T> >::iterator_category     iterator_category;
+	        typedef typename ft::iterator_traits< ft::iterator<ft::bidirectionnal_iterator_tag, T> >::value_type            value_type;
+	        typedef typename ft::iterator_traits< ft::iterator<ft::bidirectionnal_iterator_tag, T> >::difference_type       difference_type;
+	        typedef typename ft::iterator_traits< ft::iterator<ft::bidirectionnal_iterator_tag, T> >::pointer               pointer;
+	        typedef typename ft::iterator_traits< ft::iterator<ft::bidirectionnal_iterator_tag, T> >::reference             reference;
+	        typedef ft::Node*                                                                                               nodePtr;
+
+			Compare		_comp;
+			nodePtr		_node;
+
+
+	        Itmap(): current() {}
+			
+	        explicit Itmap(iterator_type x): current(x) {}
+			
+	        template < class U >
+	        Itmap(const Itmap<U>& copy): current(copy.current) {}
+			
+	        template < class U >
+	        Itmap& operator=(const Itmap<U>& copy)
+	        {
+	            if (this != &copy)
+	                this->_comp = copy._comp;
+	                this->_node = copy._node;
+	            return (*this);
+	        }
+
+	        // ------------------- Member functions ------------------- //
+	        reference operator*() const { return (node->data); }
+	        pointer operator->() const { return (&this->_node->data); }
+	        iterator_type base() const { return (Iterator(this->current)); }
+
+			Itmap& operator++()
+			{
+				nodePtr cursor = this->_node;
+				nodePtr lastnode = this->_node;
+
+				while (lastnode && lastnode->parent != nullptr)
+					lastnode = lastnode->parent;
+				while (lastnode && last->right != nullptr)
+					lastnode = last->right;
+				if (_node->right == lastnode)
+				{
+					cursor = _node->parent;
+					while (cursor != lastnode
+						&& _comp(cursor->data.first, _node->data.first))
+						cursor = cursor->parent;
+					_node = cursor;
+				}
+				else if (cursor == lastnode)
+					_node = lastnode->right;
+				else
+				{
+					cursor = _node->right;
+					if (cursor == lastnode->parent
+						&& cursor->right == lastnode)
+						_node = cursor;
+					else
+					{
+						while (cursor->left != lastnode)
+							cursor = cursor->left;
+					}
+					_node = cursor;
+				}
+				return (*this);
+			}
+
+			Itmap operator++(int) 
+			{
+				Itmap tmp(*this);
+
+				operator++();
+				return (tmp);
+			}
+
+	        Itmap& operator--()
+			{
+				nodePtr cursor = _node;
+				nodePtr lastnode = this->root;
+
+				while (lastnode && lastnode->parent != nullptr)
+					lastnode = lastnode->parent;
+				while (lastnode && last->right != nullptr)
+					lastnode = last->right;
+
+				if (_node->left == lastnode)
+				{
+					cursor = _node->parent;
+					while (cursor != lastnode
+						&& !_comp(cursor->data.first, _node->data.first))
+						cursor = cursor->parent;
+					_node = cursor;
+				}
+				else if (cursor == lastnode)
+					_node = lastnode->right;
+				else
+				{
+					cursor = _node->left;
+					if (cursor == lastnode->parent
+						&& cursor->left == lastnode)
+						_node = cursor;
+					else
+					{
+						while (cursor->right != lastnode)
+							cursor = cursor->right;
+					}
+					_node = cursor;
+				}
+				return (*this);
+			}
+
+	        Itmap operator--(int)
+			{
+				Itmap tmp(*this);
+				operator--();
+				return (tmp);
+			}
+	};
 /*
-    template < class T, class Compare >
-    class Itmap
-    {
-        public:
-            //------------------- Member types -------------------//
-            typedef typename ft::iterator_traits<T*>::iterator_category   iterator_category;
-            typedef typename ft::iterator_traits<T*>::value_type          value_type;
-            typedef typename ft::iterator_traits<T*>::difference_type     difference_type;
-            typedef typename ft::iterator_traits<T*>::pointer             pointer;
-            typedef typename ft::iterator_traits<T*>::reference           reference;
-
-            //------------------- Member functions : Constructors / Destructor -------------------//
-            Itmap(pointer ptr = nullptr): _ptr(ptr) {}
-            ~Itmap() { _ptr = nullptr; }
-            template < class U >
-            Itmap& operator=(const Itmap<U>& copy)                  ////// template maybe not necessary
-            {
-                if (this != &copy)
-                {
-                    this->_comp = copy._comp;
-                    this->
-                }
-                return (*this);
-            } 
-
-            //------------------- Member functions -------------------//
-            reference operator*() const { return (*this->_ptr); }
-            pointer operator->() const { return (this->_ptr); }
-            Itmap& operator++() { this->_ptr++; return (*this); }
-            Itmap operator++(int) { Itmap tmp = *this; ++(*this); return (tmp); }
-            Itmap& operator+=(difference_type n) { this->_ptr += n; return (*this); }
-            Itmap operator+(difference_type n) const { Itmap tmp = *this; return (tmp += n); }
-            Itmap& operator-=(difference_type n) { this->_ptr -= n; return (*this); }
-            Itmap operator-(difference_type n) const { Itmap tmp = *this; return (tmp -= n); }
-            Itmap& operator--() { this->_ptr--; return (*this); }
-            Itmap  operator--(int) { Itmap tmp = *this; --(*this); return (tmp); }
-            reference operator[](difference_type n) const { return *(this->_ptr + n); }
-
-            pointer getPtr() const { return (this->_ptr); }
-    };
-
     //-------------------- Itmap non-member functions --------------------//
     template < class T >
     bool operator==(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.getPtr() == rhs.getPtr()); }

@@ -46,7 +46,7 @@ namespace ft
 				{
 					node = node->left;
 				}
-				return node;
+				return (node);
 			}
 			void rbTransplant(node_pointer u, node_pointer v)
 			{
@@ -54,7 +54,7 @@ namespace ft
 				{
 					root = v;
 				}
-                else if (u == u->parent->left)
+				else if (u == u->parent->left)
 				{
 					u->parent->left = v;
 				}

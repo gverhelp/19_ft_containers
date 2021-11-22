@@ -31,20 +31,20 @@ namespace ft
 
             //------------------- Value compare : classe imbriquée -------------------//
             class value_compare : 
-			{
-				protected:
-  					Compare comp;
-  					value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
+            {
+                protected:
+                    Compare comp;
+                    value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
 
-				public:
-					/*Member typed*/
-  					typedef bool result_type;
-  					typedef value_type first_argument_type;
-  					typedef value_type second_argument_type;
+                public:
+                    /*Member typed*/
+                    typedef bool result_type;
+                    typedef value_type first_argument_type;
+                    typedef value_type second_argument_type;
 
-					/*Member function*/
-  					bool operator() (const value_type& x, const value_type& y) const { return comp(x.first, y.first); }
-			}
+                    /*Member function*/
+                    bool operator() (const value_type& x, const value_type& y) const { return comp(x.first, y.first); }
+            }
 
             //------------------- Member functions : Constructor / Destructor + operator = -------------------//
 /*            explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _size(0), _tree(BTree())
