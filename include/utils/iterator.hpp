@@ -1,7 +1,7 @@
 #ifndef ITERATOR_HPP
 # define ITERATOR_HPP
 
-# include "btree.hpp"
+//# include "btree.hpp"
 # include <cstddef>
 # include <iostream>
 
@@ -135,6 +135,8 @@ namespace ft
             typedef typename ft::iterator_traits<T*>::pointer             pointer;
             typedef typename ft::iterator_traits<T*>::reference           reference;
 
+            operator It< const T >() const { return (It< const T>()); } // https://stackoverflow.com/questions/25117970/conversion-operator-with-const
+
             //------------------- Member functions : Constructors / Destructor -------------------//
             It(pointer ptr = nullptr): _ptr(ptr) {}
             ~It() { _ptr = nullptr; }
@@ -168,20 +170,35 @@ namespace ft
     //-------------------- It non-member functions --------------------//
     template < class T >
     bool operator==(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() == rhs.getPtr()); }
+//    template < class T, class T2 >
+//    bool operator==(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() == rhs.getPtr()); }
     template < class T >
     bool operator!=(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() != rhs.getPtr()); }
     template < class T >
     bool operator<(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() < rhs.getPtr()); }
+//    template < class T, class T2 >
+//    bool operator<(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() < rhs.getPtr()); }
     template < class T >
     bool operator<=(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() <= rhs.getPtr()); }
+//    template < class T, class T2 >
+//    bool operator<=(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() <= rhs.getPtr()); }
     template < class T >
     bool operator>(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() > rhs.getPtr()); }
     template < class T >
     bool operator>=(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() >= rhs.getPtr()); }
+//    template < class T, class T2 >
+//    bool operator>=(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() >= rhs.getPtr()); }
+    template < class T >
+    It<T> operator+(typename ft::It<T>::difference_type n, const ft::It<T>& it) { return (It<T>(it.getPtr() - n)); }
+    template < class T >
+    typename ft::It<T>::difference_type operator-(const It<T>& lhs, const ft::It<T>& rhs) { return (rhs.getPtr() - lhs.getPtr()); }
+//    template < class T, class T2 >
+//    typename ft::It<T>::difference_type operator-(const It<T>& lhs, const ft::It<T2>& rhs) { return (rhs.getPtr() - lhs.getPtr()); }  /// iterator - const_itrator
 
     ////////////////////////////////////////////////////////
     //////////////////// Iterator : Map ////////////////////
     ////////////////////////////////////////////////////////
+/*
     template < typename T, class Compare >
     class Itmap 
     {
@@ -303,6 +320,7 @@ namespace ft
                 return (tmp);
             }
     };
+*/
 /*
     //-------------------- Itmap non-member functions --------------------//
     template < class T >

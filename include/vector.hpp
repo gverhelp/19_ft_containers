@@ -89,12 +89,18 @@ namespace ft
             size_type max_size() const { return (this->_base.max_size()); } //Return maximum size of allocated storage
             void resize(size_type n, value_type val = value_type())
             {
-                if (n < this->_size)
+                if (n < this->_maxSize)
                 {
                     for (size_t a = n; a < this->_size; a++)
                         this->_base.destroy(this->_ptr + a);
                 }
-                if (n > this->_size)
+                else if (n > this->_maxSize && n <= this->_maxSize * 2)
+                {
+                    reserve(this->_maxSize * 2);
+                    for (size_t a = this->_size; a < n; a++)
+                        this->_base.construct(this->_ptr + a, val);
+                }
+                else if (n > this->_maxSize * 2)
                 {
                     reserve(n);
                     for (size_t a = this->_size; a < n; a++)

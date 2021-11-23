@@ -19,7 +19,7 @@ namespace ft
         int         color;
     };
 
-    template < class Key, class Value, class T = ft::pair< Key, Value >, class Node = ft::Node<T>, class Node_Alloc = std::allocator<Node> >
+    template < class Key, class Value, class T = ft::pair< Key, Value >, class Node = ft::Node<T>, class Node_Alloc = std::allocator<Node> >     /// Faire un rebind d'allocator
     class BTree
     {
         private:
