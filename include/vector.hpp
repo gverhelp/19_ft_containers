@@ -27,18 +27,18 @@ namespace ft
             typedef size_t                                                  size_type;
 
             //------------------- Member functions : Constructors & Destructor + operator = -------------------//
-            explicit vector(const allocator_type& alloc = allocator_type()): _base(alloc), _size(0), _maxSize(0)
+            explicit vector(const allocator_type& alloc = allocator_type()): _size(0), _maxSize(0), _base(alloc)
             {
                 this->_ptr = this->_base.allocate(0);
             }
-            explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()): _base(alloc), _size(n), _maxSize(n)
+            explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()): _size(n), _maxSize(n), _base(alloc)
             {
                 this->_ptr = this->_base.allocate(n);
                 for (size_t a = 0; a < n; a++)
                     this->_base.construct(this->_ptr + a, val);
             }
             template <class InputIterator>
-            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr): _base(alloc), _size(0), _maxSize(0) //Range constructor
+            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr): _size(0), _maxSize(0), _base(alloc) //Range constructor
             {
                 for (; first < last; first++)
                     this->_size++;
@@ -49,7 +49,7 @@ namespace ft
                     this->_base.construct(_ptr + a, *(first + a));
             }
 
-            vector(const vector& x): _base(x._base), _size(x._size), _maxSize(x._maxSize)
+            vector(const vector& x): _size(x._size), _maxSize(x._maxSize), _base(x._base)
             {
                 this->_ptr = this->_base.allocate(0);
                 *this = x;
@@ -89,20 +89,22 @@ namespace ft
             size_type max_size() const { return (this->_base.max_size()); } //Return maximum size of allocated storage
             void resize(size_type n, value_type val = value_type())
             {
-                if (n < this->_maxSize)
+                if (n < this->_size)
                 {
                     for (size_t a = n; a < this->_size; a++)
                         this->_base.destroy(this->_ptr + a);
                 }
-                else if (n > this->_maxSize && n <= this->_maxSize * 2)
+                else if (n > this->_size && n <= this->_maxSize)
                 {
-                    reserve(this->_maxSize * 2);
                     for (size_t a = this->_size; a < n; a++)
                         this->_base.construct(this->_ptr + a, val);
                 }
-                else if (n > this->_maxSize * 2)
+                else if (n > this->_size && n > this->_maxSize)
                 {
-                    reserve(n);
+                    if (n < this->_maxSize * 2)
+                        reserve(this->_maxSize * 2);
+                    else
+                        reserve(n);
                     for (size_t a = this->_size; a < n; a++)
                         this->_base.construct(this->_ptr + a, val);
                 }
@@ -199,11 +201,15 @@ namespace ft
             template <class InputIterator>
             void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr) //Insert elements
             {
-                iterator it = position;
-
-                for (; first < last; first++)
+                iterator    it = position;
+                vector      tmp(first, last);
+                iterator    begin = tmp.begin();
+                iterator    end = tmp.end();
+                
+                for (; begin < end; begin++)
                 {
-                    it = insert(it, *first);
+
+                    it = insert(it, *begin);
                     it++;
                 }
             }
@@ -221,7 +227,7 @@ namespace ft
                     return (this->end());
                 return (position);
 /*
-                iterator it;
+                iterator it;                                                                                                                        //VALGRIND
                 vector tmp;
                 size_t a = 0;
                 size_t b = 0;
@@ -320,7 +326,7 @@ namespace ft
 
     //------------------- Non-member functions -------------------//
     template <class T, class Alloc>
-    bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)                                                 //Maybe use EQUAL
     {
         if (lhs.size() != rhs.size())
             return false;

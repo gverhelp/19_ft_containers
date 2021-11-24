@@ -11,8 +11,11 @@ void print_container(T& c, std::string str)
     for (it = c.begin(); it < c.end(); it++)
         std::cout << "[" << *it << "] ";
     std::cout << std::endl << "Size " << str << " : " << c.size() << std::endl;
-}
+    std::cout << "Capacity " << str << " : " << c.capacity() << std::endl;
+    std::cout << "Max size " << str << " : " << c.max_size() << std::endl;
 
+}
+/*
 int main()
 {
     ft::vector<int> v1(5, 6);
@@ -118,4 +121,23 @@ int main()
     print_container(v1, "v1");
     print_container(v3, "v3");
     return (0);
+}
+*/
+
+int main()
+{
+    ft::vector<int> f;
+    std::vector<int> t;
+
+    for (int a = 0; a < 7; a++)
+    {
+        f.push_back(a);
+        t.push_back(a);
+    }
+    print_container(f, "false");
+    print_container(t, "true");
+    f.resize(2, 0);
+    t.resize(2, 0);
+    print_container(f, "false");
+    print_container(t, "true");
 }

@@ -1,4 +1,4 @@
-#include "include/vector.hpp"
+#include "../include/vector.hpp"
 
 #include <vector>
 #include <iostream>
@@ -119,33 +119,33 @@ int main(void)
 	/* --- CAPACITY --- */
 	
 	{
-		// std::vector<char> v_char;
-		// outputfile << "sizeof(char): " << sizeof(char) << std::endl;
-		// outputfile << "9223372036854775807 / sizeof(char): " << 9223372036854775807 / sizeof(char) << std::endl;
-		// outputfile << "sizeof(int): " << sizeof(int) << std::endl;
-		// outputfile << "9223372036854775807 / sizeof(int): " << 9223372036854775807 / sizeof(int) << std::endl;
-		// outputfile << "sizeof(std::string): " << sizeof(std::string) << std::endl;
-		// outputfile << "9223372036854775807 / sizeof(std::string): " << 9223372036854775807 / sizeof(int) << std::endl;
-		// outputfile << "v_char.max_size(): " << v_char.max_size() << std::endl;
-		// std::vector<int> v_int;
-		// outputfile << "v_int.max_size(): " << v_int.max_size() << std::endl;
-		// std::vector<std::string> v_str;
-		// outputfile << "v_str.max_size(): " << v_str.max_size() << std::endl;
+		 std::vector<char> v_char;
+		 outputfile << "sizeof(char): " << sizeof(char) << std::endl;
+		 outputfile << "9223372036854775807 / sizeof(char): " << 9223372036854775807 / sizeof(char) << std::endl;
+		 outputfile << "sizeof(int): " << sizeof(int) << std::endl;
+		 outputfile << "9223372036854775807 / sizeof(int): " << 9223372036854775807 / sizeof(int) << std::endl;
+		 outputfile << "sizeof(std::string): " << sizeof(std::string) << std::endl;
+		 outputfile << "9223372036854775807 / sizeof(std::string): " << 9223372036854775807 / sizeof(int) << std::endl;
+		 outputfile << "v_char.max_size(): " << v_char.max_size() << std::endl;
+		 std::vector<int> v_int;
+		 outputfile << "v_int.max_size(): " << v_int.max_size() << std::endl;
+		 std::vector<std::string> v_str;
+		 outputfile << "v_str.max_size(): " << v_str.max_size() << std::endl;
 	}
 	{
-		// outputfile << YELLOW "max_size" RESET << std::endl;
-		// unsigned long size;
-		// NAMESPACE::vector<char> v_char;
-		// size = v_char.max_size();
-		// outputfile << "v_char.max_size(): " << size << std::endl;
+		 outputfile << YELLOW "max_size" RESET << std::endl;
+		 unsigned long size;
+		 NAMESPACE::vector<char> v_char;
+		 size = v_char.max_size();
+		 outputfile << "v_char.max_size(): " << size << std::endl;
 		
-		// NAMESPACE::vector<int> v_int;
-		// size = v_int.max_size();
-		// outputfile << "v_int.max_size(): " << size << std::endl;
+		 NAMESPACE::vector<int> v_int;
+		 size = v_int.max_size();
+		 outputfile << "v_int.max_size(): " << size << std::endl;
 
-		// NAMESPACE::vector<std::string> v_str;
-		// size =v_str.max_size();
-		// outputfile << "v_str.max_size(): " << size << std::endl;
+		 NAMESPACE::vector<std::string> v_str;
+		 size =v_str.max_size();
+		 outputfile << "v_str.max_size(): " << size << std::endl;
 	}
 	{
 		outputfile << YELLOW "reserve" RESET << std::endl;
@@ -317,7 +317,7 @@ int main(void)
 		it2 = it1;
 		NAMESPACE::vector<int> v(v_int_100.begin() + 5, v_int_100.begin() + 8);
 		// parameter constructor
-		NAMESPACE::vector<int>::const_iterator it3 = v.begin();
+		NAMESPACE::vector<int>::const_iterator it3 = v.begin();																							//ATTENTION IL FAUT REGLER CE GORS SOUCIS (COPY CONSTRUCTOR IT)
 		NAMESPACE::vector<int>::const_iterator it4(it3);
 		assert(*it4 == 5);
 		outputfile << *it4 << std::endl;
@@ -406,23 +406,23 @@ int main(void)
 		v.push_back(6);
 		NAMESPACE::vector<int>::iterator it = v.begin();
 		NAMESPACE::vector<int>::iterator it2 = it + 1; // it + n
-		outputfile << "*it2: " << *it2 << std::endl;
+		outputfile << "*it2: " << *it2 << std::endl;  //3
 
 		it2 = 1 + it2; // n + it
-		outputfile << "*it2: " << *it2 << std::endl;
+		outputfile << "*it2: " << *it2 << std::endl; //6
 
 		it2 = it2 - 1; // it - n
-		outputfile << "*it2: " << *it2 << std::endl;
+		outputfile << "*it2: " << *it2 << std::endl; //3
 
 		it2 = v.begin() + 2;
 		int dif = it - it2; // it - it
-		outputfile << dif << std::endl;
+		outputfile << dif << std::endl;     //2
 
 		dif = it2 - it;
-		outputfile << dif << std::endl;
+		outputfile << dif << std::endl;    //-2
 
-		NAMESPACE::vector<int>::const_iterator it3(it2);
-		outputfile << (it - it3) << std::endl;
+		NAMESPACE::vector<int>::const_iterator it3(it2);																					//A REGLER (COPY CONSTRUCTEUR IT)
+		outputfile << (it - it3) << std::endl;   //-jspquoi
 
 	}
 	{
@@ -1467,7 +1467,7 @@ void test_enable_if_and_is_integral()
 
 void test_reverse_iterator_relational_operators()
 {
-
+	outputfile << "\ntest_reverse_iterator_relational_operators\n";
 	NAMESPACE::vector<int> v;
 	v.push_back(1);
 	v.push_back(2);

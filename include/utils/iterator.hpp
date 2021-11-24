@@ -76,7 +76,7 @@ namespace ft
             reverse_iterator(): current() {}
             explicit reverse_iterator(iterator_type x): current(x) {}
             template < class U >
-            reverse_iterator(const reverse_iterator<U>& other): current(other.current) {}
+            reverse_iterator(const reverse_iterator<U>& other): current(other.base()) {}
             template < class U >
             reverse_iterator& operator=(const reverse_iterator<U>& other)
             {
@@ -106,20 +106,34 @@ namespace ft
     //------------------- Reverse iterator : non-member functions -------------------//
     template < class Iterator >
     bool operator==(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator>& rhs) { return (lhs.base() == rhs.base()); }
+    template < class Iterator, class Iterator2 >
+    bool operator==(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() == rhs.base()); }
     template < class Iterator >
     bool operator!=(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator>& rhs) { return (lhs.base() != rhs.base()); }
+    template < class Iterator, class Iterator2 >
+    bool operator!=(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() != rhs.base()); }
     template < class Iterator >
     bool operator<(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator>& rhs) { return (lhs.base() > rhs.base()); }
+    template < class Iterator, class Iterator2 >
+    bool operator<(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() > rhs.base()); }
     template < class Iterator >
     bool operator<=(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator>& rhs) { return (lhs.base() >= rhs.base()); }
+    template < class Iterator, class Iterator2 >
+    bool operator<=(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() >= rhs.base()); }
     template < class Iterator >
     bool operator>(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator>& rhs) { return (lhs.base() < rhs.base()); }
+    template < class Iterator, class Iterator2 >
+    bool operator>(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() < rhs.base()); }
     template < class Iterator >
     bool operator>=(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator>& rhs) { return (lhs.base() <= rhs.base()); }
+    template < class Iterator, class Iterator2 >
+    bool operator>=(const ft::reverse_iterator<Iterator>& lhs, const ft::reverse_iterator<Iterator2>& rhs) { return (lhs.base() <= rhs.base()); }
     template < class Iterator >
     reverse_iterator<Iterator> operator+(typename reverse_iterator<Iterator>::difference_type n, const reverse_iterator<Iterator>& it) { return (reverse_iterator<Iterator>(it.base() - n)); }
-    template <class Iterator>
+    template < class Iterator >
     typename reverse_iterator<Iterator>::difference_type operator-(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs) { return (rhs.base() - lhs.base()); }
+    template < class Iterator, class Iterator2 >
+    typename reverse_iterator<Iterator>::difference_type operator-(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator2>& rhs) { return (rhs.base() - lhs.base()); }
     
     ///////////////////////////////////////////////////////////
     //////////////////// Iterator : Vector ////////////////////
@@ -135,13 +149,14 @@ namespace ft
             typedef typename ft::iterator_traits<T*>::pointer             pointer;
             typedef typename ft::iterator_traits<T*>::reference           reference;
 
-            operator It< const T >() const { return (It< const T>()); } // https://stackoverflow.com/questions/25117970/conversion-operator-with-const
+            operator It< const T >() const { return (It< const T>(this->_ptr)); } // https://stackoverflow.com/questions/25117970/conversion-operator-with-const
 
             //------------------- Member functions : Constructors / Destructor -------------------//
             It(pointer ptr = nullptr): _ptr(ptr) {}
+            It(const It& cpy): _ptr(cpy.getPtr()) {}
             ~It() { _ptr = nullptr; }
             template < class U >
-            It& operator=(const It<U>& copy)                  ////// template maybe not necessary
+            It& operator=(const It<U>& copy)
             {
                 if (this != &copy)
                     this->_ptr = copy._ptr;
@@ -170,30 +185,34 @@ namespace ft
     //-------------------- It non-member functions --------------------//
     template < class T >
     bool operator==(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() == rhs.getPtr()); }
-//    template < class T, class T2 >
-//    bool operator==(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() == rhs.getPtr()); }
+    template < class T, class T2 >
+    bool operator==(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() == rhs.getPtr()); }
     template < class T >
     bool operator!=(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() != rhs.getPtr()); }
+    template < class T, class T2 >
+    bool operator!=(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() != rhs.getPtr()); }
     template < class T >
     bool operator<(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() < rhs.getPtr()); }
-//    template < class T, class T2 >
-//    bool operator<(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() < rhs.getPtr()); }
+    template < class T, class T2 >
+    bool operator<(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() < rhs.getPtr()); }
     template < class T >
     bool operator<=(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() <= rhs.getPtr()); }
-//    template < class T, class T2 >
-//    bool operator<=(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() <= rhs.getPtr()); }
+    template < class T, class T2 >
+    bool operator<=(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() <= rhs.getPtr()); }
     template < class T >
     bool operator>(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() > rhs.getPtr()); }
+    template < class T, class T2 >
+    bool operator>(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() > rhs.getPtr()); }
     template < class T >
     bool operator>=(const ft::It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() >= rhs.getPtr()); }
-//    template < class T, class T2 >
-//    bool operator>=(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() >= rhs.getPtr()); }
+    template < class T, class T2 >
+    bool operator>=(const ft::It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() >= rhs.getPtr()); }
     template < class T >
-    It<T> operator+(typename ft::It<T>::difference_type n, const ft::It<T>& it) { return (It<T>(it.getPtr() - n)); }
+    It<T> operator+(typename ft::It<T>::difference_type n, const ft::It<T>& it) { return (It<T>(it.getPtr() + n)); }
     template < class T >
-    typename ft::It<T>::difference_type operator-(const It<T>& lhs, const ft::It<T>& rhs) { return (rhs.getPtr() - lhs.getPtr()); }
-//    template < class T, class T2 >
-//    typename ft::It<T>::difference_type operator-(const It<T>& lhs, const ft::It<T2>& rhs) { return (rhs.getPtr() - lhs.getPtr()); }  /// iterator - const_itrator
+    typename ft::It<T>::difference_type operator-(const It<T>& lhs, const ft::It<T>& rhs) { return (lhs.getPtr() - rhs.getPtr()); }
+    template < class T, class T2 >
+    typename ft::It<T>::difference_type operator-(const It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.getPtr() - rhs.getPtr()); }  /// iterator - const_itrator
 
     ////////////////////////////////////////////////////////
     //////////////////// Iterator : Map ////////////////////
