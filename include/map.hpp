@@ -5,6 +5,7 @@
 # include <functional>
 # include <utility>
 # include "utils/utils.hpp"
+# include "utils/iterator.hpp"
 # include "utils/btree.hpp"
 
 namespace ft
@@ -24,13 +25,13 @@ namespace ft
             typedef const value_type&                       const_reference;
             typedef typename Allocator::pointer             pointer;
             typedef typename Allocator::const_pointer       const_pointer;
-            //typedef "LegacyBidirectionalIterator to value_type" iterator;
-            //typedef "LegacyBidirectionalIterator to const value_type" const_iterator;
-            //typedef std::reverse_iterator<iterator> reverse_iterator;
-            //typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+            typedef ft::Itmap< Node<T> >                    iterator;
+            typedef ft::Itmap< const Node<T> >              const_iterator;
+            typedef ft::reverse_iterator<iterator>          reverse_iterator;
+            typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
 
             //------------------- Value compare : classe imbriquée -------------------//
-            class value_compare : 
+            class value_compare
             {
                 protected:
                     Compare comp;
@@ -44,37 +45,39 @@ namespace ft
 
                     /*Member function*/
                     bool operator() (const value_type& x, const value_type& y) const { return comp(x.first, y.first); }
-            }
+            };
 
             //------------------- Member functions : Constructor / Destructor + operator = -------------------//
-/*            explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _size(0), _tree(BTree())
+            explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _tree(ft::BTree<key_type, mapped_type>()), _size(0)                                                 /////// finir le constructor
             {
-
+                (void)comp;
+                (void)alloc;
             }
-*/
             template <class InputIterator>
-            map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _tree(BTree()), _size(0)
+            map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _tree(BTree<key_type, mapped_type>()), _size(0)                 /////// finir le constructor
             {
+                (void)comp;                                                             /// utilisr comp
+                (void)alloc;                                                            /// utiliser alloc
                 while (first <= last)
                     _tree.insert(*first);
             }
             //map (const map& x) {}
-            //~map() {}
+            ~map() {}                                                                                                                                                                                               /////// faire le destructor
 
             //map& operator=(const map& x) {}
 
             //------------------- Member functions : Iterators -------------------//
-            iterator begin() { return (iterator(_tree->firstnode())); }
-            const_iterator begin() const { return (iterator(_tree->firstnode())); }
-            iterator end() { return (iterator(_tree->lastnode())++); }
-            const_iterator end() const { return (iterator(_tree->lastnode())++); }
-            reverse_iterator rbegin() { return (iterator(_tree->lastnode())); }
-            const_reverse_iterator rbegin() const { return (iterator(_tree->lastnode())); }
-            reverse_iterator rend() { return (iterator(_tree->firstnode())); }
-            const_reverse_iterator rend() const { return (iterator(_tree->firstnode())); }
+            iterator begin() { return (iterator(_tree.firstNode())); }
+            const_iterator begin() const { return (iterator(_tree.firstNode())); }
+            iterator end() { return (iterator(_tree.lastNode())++); }
+            const_iterator end() const { return (iterator(_tree.lastNode())++); }
+            reverse_iterator rbegin() { return (iterator(_tree.lastNode())); }
+            const_reverse_iterator rbegin() const { return (iterator(_tree.lastNode())); }
+            reverse_iterator rend() { return (iterator(_tree.firstNode())); }
+            const_reverse_iterator rend() const { return (iterator(_tree.firstNode())); }
 
             //------------------- Member functions : Capacity -------------------//
-            bool empty() const
+            bool empty() cons
             {
                 if (this->_size == 0)
                     return (true);
@@ -88,10 +91,25 @@ namespace ft
 
             //------------------- Member functions : Modifiers -------------------//	
 
-            //pair<iterator,bool> insert(const value_type& val) {}
+            pair<iterator,bool> insert(const value_type& val)
+            {
+/*
+                itratori it;
+                bool    in;
+
+                in = false;
+*/
+                //ft::Node<value_type>* node;
+
+                //node = _tree.insert(val);
+                (void)val;
+                return (ft::pair<iterator, bool>(iterator(), true));                           ///// a modifier
+            }
             iterator insert (iterator position, const value_type& val)
             {
-                return (iterator(_tree.insert(val)));    ///// à vérifier
+                (void)position;
+                //return (iterator(_tree.insert(val)));                                                       ///// à vérifier
+                return (iterator(_tree.insert(val)));                                                       ///// à vérifier
             }	
             template <class InputIterator>
             void insert (InputIterator first, InputIterator last)
@@ -125,7 +143,7 @@ namespace ft
                 }
             }
 /*
-            void swap (map& x)               ////// remplacer BTree par un pointer sur root dans map
+            void swap (map& x)                                                                           ////// remplacer BTree par un pointer sur root dans map
             {
                 size_t          swap_size;
                 ft::Node<T>*    swap_root;
@@ -193,8 +211,14 @@ namespace ft
                 return (it);
             }
 
-            //pair<iterator,iterator> equal_range (const key_type& k) {}                            ///// Nique sa mère : impinnable
-            //pair<const_iterator,const_iterator> equal_range (const key_type& k) const {}
+            pair<iterator,iterator> equal_range (const key_type& k)
+            {
+                return (ft::make_pair<iterator, iterator>(lower_bound(k), upper_bound(k)));
+            }
+            pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+            {
+                return (ft::make_pair<iterator, iterator>(lower_bound(k), upper_bound(k)));
+            }
 
             //------------------- Member functions : Allocator -------------------//
             allocator_type get_allocator() const { return (this->_alloc); }
@@ -202,7 +226,7 @@ namespace ft
         private:
             allocator_type                              _alloc;
             key_compare                                 _comp;
-            BTree<key_type, mapped_type, value_type>    _tree;
+            BTree<key_type, mapped_type>                _tree;
             size_type                                   _size;     ///// mettre à jour size partout
             ft::Node<T>*                                _root;     ///// mettre à jour root partout
 

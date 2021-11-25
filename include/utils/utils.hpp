@@ -4,7 +4,7 @@
 namespace ft
 {
     /////////////////////////////////////////////
-    //////////////////// MAP ////////////////////                   ////// Faire un makepair, un comp, rebind
+    //////////////////// MAP ////////////////////                   ////// Faire comp, rebind
     /////////////////////////////////////////////
     template < class T1, class T2 >
     struct pair
@@ -20,6 +20,12 @@ namespace ft
         pair (const pair<U,V>& pr): first(pr.first), second(pr.second) {}
         pair (const first_type& a, const second_type& b): first(a), second(b) {}
     };
+
+    template < class T1, class T2 >
+    pair<T1,T2> make_pair(T1 x, T2 y)
+    {
+        return (pair<T1,T2>(x, y));
+    }
 
     template < class Arg1, class Arg2, class Result >
     struct binary_function
@@ -43,6 +49,24 @@ namespace ft
     //////////////////// ALL ////////////////////
     /////////////////////////////////////////////
 
+    // //------------------- nullptr -------------------//       //https://stackoverflow.com/questions/44517556/how-to-define-our-own-nullptr-in-c98
+    // const                         /* this is a const object...     */
+    // class nullptr_t
+    // {
+    //     public:
+    //         template<class T>               /* convertible to any type       */
+    //         operator T*() const             /* of null non-member            */
+    //         { return 0; }                   /* pointer...                    */
+
+    //         template<class C, class T>      /* or any type of null           */
+    //         operator T C::*() const         /* member pointer...             */
+    //         { return 0; }   
+
+    //     private:
+    //         void operator&() const;         /* Can't take address of nullptr */
+
+    // }   nullptr = {};
+
     //------------------- Lexicographical compare -------------------//
 	template<class InputIt1, class InputIt2>
 	bool lexicographical_compare(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2)
@@ -53,7 +77,7 @@ namespace ft
         	if (*first2 < *first1) return false;
     	}
     	return (first1 == last1) && (first2 != last2);
-	};
+	}
 	template<class InputIt1, class InputIt2, class Compare>
 	bool lexicographical_compare(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2, Compare comp)
 	{
@@ -65,7 +89,7 @@ namespace ft
     	return (first1 == last1) && (first2 != last2);
 	}
 
-    //------------------- Enable if -------------------//
+    //------------------- Enable if -------------------//     //https://h-deb.clg.qc.ca/Sujets/TrucsScouts/Comprendre_enable_if.html
     template<bool B, class T = void>
     struct enable_if {};
  

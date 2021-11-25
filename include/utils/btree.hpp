@@ -32,15 +32,16 @@ namespace ft
             typedef Node                            node_type;
             typedef Node*                           node_pointer;
             typedef Node_Alloc						node_alloc;
+			typedef Value							mapped_type;
             typedef typename node_alloc::pointer    node_alloc_pointer;
 
-			Btree(): root(nullptr), _size(0) {}
-			~Btree()
+			BTree(): root(nullptr), _size(0) {}
+			~BTree()
 			{
 				this->clear_all();
 			}
 
-			NodePtr minimum(NodePtr node)
+			node_pointer minimum(node_pointer node)
 			{
 				while (node->left != nullptr)
 				{
@@ -216,8 +217,7 @@ namespace ft
                     return (nullptr);
                 node_pointer toInsert = node_alloc().allocate(1);
 				node_alloc().construct(toInsert, node_type());
-                toInsert->data.first = val.first;
-                toInsert->data.second = val.second;
+                //toInsert->data = ft::pair<value_type, mapped_type>(val.first, val.second);												/////// MAKE_PAIR
                 toInsert->parent = parent;
                 toInsert->left = nullptr;
                 toInsert->right = nullptr;
@@ -402,7 +402,7 @@ namespace ft
 				node_pointer first = this->root;
 
 				while (first && first->left != nullptr)
-					first = firsy->left;
+					first = first->left;
 				return (first);
 			}
 
@@ -416,8 +416,8 @@ namespace ft
 				clear(node->right);
 				
 				/* then delete the node */
-				std::cout << "\n Deleting node: " << node->data;
-				node_alloc().destroy(*node);
+				//std::cout << "\n Deleting node: " << node->data;
+				node_alloc().destroy(node);
 				node_alloc().deallocate(node, 1);
 				node = nullptr;
 			}
@@ -428,8 +428,8 @@ namespace ft
 			}
 
 			size_t getSize() { return (this->_size); }
-			size_t getMaxSize() { return (allocator_type().max_size()); }
-			node_pointer getRoot() { return (_root); }
+			size_t getMaxSize() { return (node_alloc().max_size()); }
+			node_pointer getRoot() { return (this->root); }
     };
 }
 
