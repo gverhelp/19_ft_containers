@@ -4,6 +4,7 @@
 //# include "btree.hpp"
 # include <cstddef>
 # include <iostream>
+# include "../map.hpp"
 
 namespace ft
 {
@@ -231,9 +232,9 @@ namespace ft
 
             operator Itmap< const T >() const { return (Itmap< const T>(this->_node)); }
 
-            Itmap(pointer node = nullptr): _node(node) {}
-            template < class U >
-            Itmap(const Itmap<U>& cpy): _node(cpy.base()) {}
+            Itmap(ft::Node<T>* node = nullptr): _node(node) {}
+            //template < class U >
+            //Itmap(const Itmap<U>& cpy): _node(cpy.base()) {}
 			
             ~Itmap() {}
             template < class U >
