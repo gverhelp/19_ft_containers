@@ -252,7 +252,7 @@ namespace ft
             Itmap& operator++()
             {
                 node_pointer cursor = this->_node;
-                node_pointer lastnode = this->_node;
+                node_pointer lastnode = this->_node;                                                                            ///// FAUX
 
                 while (lastnode && lastnode->parent != nullptr)
                     lastnode = lastnode->parent;
@@ -293,7 +293,7 @@ namespace ft
             Itmap& operator--()
             {
                 node_pointer cursor = _node;
-                node_pointer lastnode = this->_node;
+                node_pointer lastnode = this->_node;                                                                                ///// FAUX
 
                 while (lastnode && lastnode->parent != nullptr)
                     lastnode = lastnode->parent;
