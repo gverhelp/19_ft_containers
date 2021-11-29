@@ -38,9 +38,16 @@ int main()
 	//it++;
 
 	ft::pair<int, std::string> p1(1, "foo");
+	ft::pair<int, std::string> p2(2, "xd");
 	mapp.insert(p1);
+	mapp.insert(p2);
 
 	it = mapp.begin();
+	std::cout << it->first << std::endl;
+	std::cout << it->second << std::endl;
+	it++;
+	std::cout << it->first << std::endl;
+	std::cout << it->second << std::endl;
 	//mapp.insert(std::pair{2, "bar"});
 	//mapp.insert(std::pair{3, "baz"});
 	//mapp.insert(std::pair{4, "lol"});

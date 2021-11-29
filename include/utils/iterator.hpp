@@ -1,10 +1,8 @@
 #ifndef ITERATOR_HPP
 # define ITERATOR_HPP
 
-//# include "btree.hpp"
 # include <cstddef>
 # include <iostream>
-# include "../map.hpp"
 
 namespace ft
 {
@@ -224,18 +222,19 @@ namespace ft
 
         public:
             // ------------------- Member types ------------------- //
-            typedef typename ft::iterator_traits< ft::iterator<ft::bidirectional_iterator_tag, T> >::iterator_category     iterator_category;
-            typedef typename ft::iterator_traits< ft::iterator<ft::bidirectional_iterator_tag, T> >::value_type            value_type;
-            typedef typename ft::iterator_traits< ft::iterator<ft::bidirectional_iterator_tag, T> >::difference_type       difference_type;
-            typedef typename ft::iterator_traits< ft::iterator<ft::bidirectional_iterator_tag, T> >::pointer               pointer;
-            typedef typename ft::iterator_traits< ft::iterator<ft::bidirectional_iterator_tag, T> >::reference             reference;
+            typedef typename ft::iterator_traits< ft::iterator<ft::bidirectional_iterator_tag, T> >::iterator_category      iterator_category;
+            typedef typename ft::iterator_traits< ft::iterator<ft::bidirectional_iterator_tag, T> >::value_type             value_type;
+            typedef typename ft::iterator_traits< ft::iterator<ft::bidirectional_iterator_tag, T> >::difference_type        difference_type;
+            typedef typename ft::iterator_traits< ft::iterator<ft::bidirectional_iterator_tag, T> >::pointer                pointer;
+            typedef typename ft::iterator_traits< ft::iterator<ft::bidirectional_iterator_tag, T> >::reference              reference;
+            typedef ft::Node<T>                                                                                             node_reference;
+            typedef ft::Node<T>*                                                                                            node_pointer;
 
             operator Itmap< const T >() const { return (Itmap< const T>(this->_node)); }
 
-            Itmap(ft::Node<T>* node = nullptr): _node(node) {}
-            //template < class U >
-            //Itmap(const Itmap<U>& cpy): _node(cpy.base()) {}
-			
+            Itmap(node_pointer node = nullptr): _node(node) {}
+            template < class U >
+            Itmap(const Itmap<U>& cpy): _node(cpy.base()) {}
             ~Itmap() {}
             template < class U >
             Itmap& operator=(const Itmap<U>& copy)
@@ -246,14 +245,14 @@ namespace ft
             }
 
             // ------------------- Member functions ------------------- //
-            reference operator*() const { return (_node->data); }
+            reference operator*() const { return (this->_node->data); }
             pointer operator->() const { return (&this->_node->data); }
-            pointer base() const { return (Iterator(this->_node)); }
+            node_pointer base() const { return (this->_node); }
 
             Itmap& operator++()
             {
-                pointer cursor = this->_node;
-                pointer lastnode = this->_node;
+                node_pointer cursor = this->_node;
+                node_pointer lastnode = this->_node;
 
                 while (lastnode && lastnode->parent != nullptr)
                     lastnode = lastnode->parent;
@@ -293,8 +292,8 @@ namespace ft
 
             Itmap& operator--()
             {
-                pointer cursor = _node;
-                pointer lastnode = this->root;
+                node_pointer cursor = _node;
+                node_pointer lastnode = this->_node;
 
                 while (lastnode && lastnode->parent != nullptr)
                     lastnode = lastnode->parent;
@@ -303,7 +302,7 @@ namespace ft
                 if (_node->left == lastnode)
                 {
                     cursor = _node->parent;
-                    while (cursor != lastnode && !_comp(cursor->data.first, _node->data.first))
+                    while (cursor != lastnode && cursor->data.first > _node->data.first)
                         cursor = cursor->parent;
                     _node = cursor;
                 }
@@ -332,7 +331,7 @@ namespace ft
                 return (tmp);
             }
         private :
-            pointer _node;
+            node_pointer _node;
     };
 
     //-------------------- Itmap non-member functions --------------------//

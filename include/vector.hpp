@@ -326,17 +326,7 @@ namespace ft
 
     //------------------- Non-member functions -------------------//
     template <class T, class Alloc>
-    bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)                                                 //Maybe use EQUAL
-    {
-        if (lhs.size() != rhs.size())
-            return false;
-        for (size_t a = 0; a < lhs.size(); a++)
-        {
-            if (lhs[a] != rhs[a])
-                return false;
-        }
-        return true;
-    }
+    bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin())); }
     template <class T, class Alloc>
     bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) { return (!(lhs == rhs)); }
     template <class T, class Alloc>
