@@ -32,28 +32,59 @@ int main()
 
 	/*Test map*/
 	ft::map<int, std::string> mapp;
-	ft::map<int, std::string>::iterator it;
+	ft::map<char, int>::iterator it;
 
 	//it++;
 	//it++;
 
 	ft::pair<int, std::string> p1(1, "foo");
 	ft::pair<int, std::string> p2(2, "xd");
-	mapp.insert(p1);
-	mapp.insert(p2);
+//	mapp.insert(p1);
+//	mapp.insert(p2);
 
-	it = mapp.begin();
-	std::cout << it->first << std::endl;
-	std::cout << it->second << std::endl;
-	it++;
-	std::cout << it->first << std::endl;
-	std::cout << it->second << std::endl;
+	// it = mapp.begin();
+	// std::cout << it->first << std::endl;
+	// std::cout << it->second << std::endl;
+	// it++;
+	// it--;
+	// std::cout << it->first << std::endl;
+	// std::cout << it->second << std::endl;
 	//mapp.insert(std::pair{2, "bar"});
 	//mapp.insert(std::pair{3, "baz"});
 	//mapp.insert(std::pair{4, "lol"});
 	//mapp.insert(std::pair{5, "meuh"});
 
 	//std::cout << "iterator = " << it->first <<std::endl;
+	ft::map<char, int> first;
+	//int i = 0;
 
+	//mapp['a'] = "lol";
+	first['a'] = 10;
+	first['b'] = 30;
+	first['c'] = 50;
+	first['d'] = 70;
+	first['e'] = 80;
+	first['f'] = 10;
+	first['g'] = 30;
+	first['h'] = 50;
+	first['i'] = 70;
+	first['j'] = 80;
+	first['k'] = 10;
+	first['l'] = 30;
+	first['m'] = 50;
+	first['n'] = 70;
+	first['o'] = 80;
+	it = first.begin();
+	first.debug();
+	// while (i < 4)
+	// {
+	// 	std::cout << it->first << std::endl;
+	// 	std::cout << it->second << std::endl;
+	// 	it++;
+	// 	i++;
+	// }
+	// it = first.end();
+	// std::cout << it->first << std::endl;
+	// std::cout << it->second << std::endl;
 	return 0;
 }

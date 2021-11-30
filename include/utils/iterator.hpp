@@ -148,37 +148,37 @@ namespace ft
             typedef typename ft::iterator_traits<T*>::pointer             pointer;
             typedef typename ft::iterator_traits<T*>::reference           reference;
 
-            operator It< const T >() const { return (It< const T>(this->_ptr)); } // https://stackoverflow.com/questions/25117970/conversion-operator-with-const
+            operator It< const T >() const { return (It< const T>(this->_node)); } // https://stackoverflow.com/questions/25117970/conversion-operator-with-const
 
             //------------------- Member functions : Constructors / Destructor -------------------//
-            It(pointer ptr = nullptr): _ptr(ptr) {}
-            It(const It& cpy): _ptr(cpy.base()) {}
-            ~It() { _ptr = nullptr; }
+            It(pointer ptr = nullptr): _node(ptr) {}
+            It(const It& cpy): _node(cpy.base()) {}
+            ~It() { _node = nullptr; }
             template < class U >
             It& operator=(const It<U>& copy)
             {
                 if (this != &copy)
-                    this->_ptr = copy._ptr;
+                    this->_node = copy._node;
                 return (*this);
             } 
 
             //------------------- Member functions -------------------//
-            reference operator*() const { return (*this->_ptr); }
-            pointer operator->() const { return (this->_ptr); }
-            It& operator++() { this->_ptr++; return (*this); }
+            reference operator*() const { return (*this->_node); }
+            pointer operator->() const { return (this->_node); }
+            It& operator++() { this->_node++; return (*this); }
             It operator++(int) { It tmp = *this; ++(*this); return (tmp); }
-            It& operator+=(difference_type n) { this->_ptr += n; return (*this); }
+            It& operator+=(difference_type n) { this->_node += n; return (*this); }
             It operator+(difference_type n) const { It tmp = *this; return (tmp += n); }
-            It& operator-=(difference_type n) { this->_ptr -= n; return (*this); }
+            It& operator-=(difference_type n) { this->_node -= n; return (*this); }
             It operator-(difference_type n) const { It tmp = *this; return (tmp -= n); }
-            It& operator--() { this->_ptr--; return (*this); }
+            It& operator--() { this->_node--; return (*this); }
             It  operator--(int) { It tmp = *this; --(*this); return (tmp); }
-            reference operator[](difference_type n) const { return *(this->_ptr + n); }
+            reference operator[](difference_type n) const { return *(this->_node + n); }
 
-            pointer base() const { return (this->_ptr); }
+            pointer base() const { return (this->_node); }
 
         private:
-            pointer _ptr;
+            pointer _node;
     };
 
     //-------------------- It non-member functions --------------------//
@@ -248,39 +248,77 @@ namespace ft
             reference operator*() const { return (this->_node->data); }
             pointer operator->() const { return (&this->_node->data); }
             node_pointer base() const { return (this->_node); }
-
+/*
             Itmap& operator++()
             {
-                node_pointer cursor = this->_node;
-                node_pointer lastnode = this->_node;                                                                            ///// FAUX
+				node_pointer    tmp;
+				node_pointer    root;
 
-                while (lastnode && lastnode->parent != nullptr)
-                    lastnode = lastnode->parent;
-                while (lastnode && lastnode->right != nullptr)
-                    lastnode = lastnode->right;
-                if (_node->right == lastnode)
+				root = this->_node;
+				while (root->parent != nullptr)
+					root = root->parent;
+
+				tmp = this->_node;
+				while (tmp != nullptr && (tmp->right == nullptr || (tmp->parent != nullptr && tmp == tmp->parent->right)))
+					tmp = tmp->parent;
+				if (tmp && tmp->parent == root)
+					tmp = root;
+				if (tmp == nullptr)
+					this->_node++;
+				else
+				{
+					this->_node = tmp->right;
+					while (this->_node != 0)
+					{
+						tmp = this->_node;
+						this->_node = this->_node->left;
+					}
+					this->_node = tmp;
+				}
+				return (*this);
+
+			}
+*/
+			Itmap& operator++(void)
+			{
+				node_pointer cursor = _node;
+                node_pointer _last_node = _node;
+                node_pointer tmp = _last_node;
+
+                while (tmp->parent)
                 {
-                    cursor = _node->parent;
-                    while (cursor != lastnode && cursor->data.first < _node->data.first)
-                        cursor = cursor->parent;
-                    _node = cursor;
+                    tmp = tmp->parent;
                 }
-                else if (cursor == lastnode)
-                    _node = lastnode->right;
-                else
+                while (tmp)
                 {
-                    cursor = _node->right;
-                    if (cursor == lastnode->parent && cursor->right == lastnode)
-                        _node = cursor;
-                    else
-                    {
-                        while (cursor->left != lastnode)
-                            cursor = cursor->left;
-                    }
-                    _node = cursor;
+                    _last_node = tmp;
+                    tmp = tmp->right;
                 }
-                return (*this);
-            }
+				if (_node->right == _last_node)
+				{
+					cursor = _node->parent;
+					while (cursor != _last_node
+						&& cursor->data.first < _node->data.first)
+						cursor = cursor->parent;
+					_node = cursor;
+				}
+				else if (cursor == _last_node)
+					_node = _last_node->right;
+				else
+				{
+					cursor = _node->right;
+					if (cursor == _last_node->parent
+						&& cursor->right == _last_node)
+						_node = cursor;
+					else
+					{
+						while (cursor->left != _last_node)
+							cursor = cursor->left;
+					}
+					_node = cursor;
+				}
+				return (*this);
+			}
 
             Itmap operator++(int) 
             {
@@ -290,38 +328,46 @@ namespace ft
                 return (tmp);
             }
 
-            Itmap& operator--()
-            {
-                node_pointer cursor = _node;
-                node_pointer lastnode = this->_node;                                                                                ///// FAUX
+			Itmap& operator--(void)
+			{
+				node_pointer cursor = _node;
+                node_pointer _last_node = _node;
+                node_pointer tmp = _last_node;
 
-                while (lastnode && lastnode->parent != nullptr)
-                    lastnode = lastnode->parent;
-                while (lastnode && lastnode->right != nullptr)
-                    lastnode = lastnode->right;
-                if (_node->left == lastnode)
+                while (tmp->parent)
                 {
-                    cursor = _node->parent;
-                    while (cursor != lastnode && cursor->data.first > _node->data.first)
-                        cursor = cursor->parent;
-                    _node = cursor;
+                    tmp = tmp->parent;
                 }
-                else if (cursor == lastnode)
-                    _node = lastnode->right;
-                else
+                while (tmp)
                 {
-                    cursor = _node->left;
-                    if (cursor == lastnode->parent && cursor->left == lastnode)
-                        _node = cursor;
-                    else
-                    {
-                        while (cursor->right != lastnode)
-                            cursor = cursor->right;
-                    }
-                    _node = cursor;
+                    _last_node = tmp;
+                    tmp = tmp->right;
                 }
-                return (*this);
-            }
+				if (_node->left == _last_node)
+				{
+					cursor = _node->parent;
+					while (cursor != _last_node
+						&& cursor->data.first > _node->data.first)
+						cursor = cursor->parent;
+					_node = cursor;
+				}
+				else if (cursor == _last_node)
+					_node = _last_node->right;
+				else
+				{
+					cursor = _node->left;
+					if (cursor == _last_node->parent
+						&& cursor->left == _last_node)
+						_node = cursor;
+					else
+					{
+						while (cursor->right != _last_node)
+							cursor = cursor->right;
+					}
+					_node = cursor;
+				}
+				return (*this);
+			}
 
             Itmap operator--(int)
             {

@@ -23,10 +23,21 @@ namespace ft
 
         Node(): data(value_type()) {}
         Node(const value_type& val): data(val) {}
-        Node(const Node& cpy): data(cpy.data) {}
+        Node(const Node& cpy): data(cpy.data), parent(cpy.parent), left(cpy.left), right(cpy.right), color(cpy.color) {}
         ~Node() {}
 
-        //value_type* operator->() const { return (data); }
+        Node& operator=(const Node& cpy)
+        {
+            if (this != &cpy)
+            {
+                this->data = cpy.data;
+                this->parent = cpy.parent;
+                this->left = cpy.left;
+                this->right = cpy.right;
+                this->color = cpy.color;
+            }
+            return (*this);
+        }
     };
 
     //------------------- pair and make_pair -------------------//
@@ -96,6 +107,20 @@ namespace ft
     /////////////////////////////////////////////
     //////////////////// ALL ////////////////////
     /////////////////////////////////////////////
+
+    //------------------- nullptr -------------------//
+    static class nullptr_t
+    {
+        public:
+            template<class T>
+            operator T*() const { return (0); }
+            template<class C, class T>
+            operator T C::*() const { return (0); }
+
+        private:
+            void operator&() const;
+
+    }           u_nullptr = {};
 
     //------------------- Equal -------------------//
     template <class InputIterator1, class InputIterator2>

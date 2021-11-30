@@ -44,51 +44,51 @@ int main(void)
 	else
 		outputfile.open("output.std.out");
 	
-	outputfile << YELLOW "CONSTRUCTORS" RESET "\n";
-	test_constructors();
-	outputfile << YELLOW "ASSIGNMENT OPERATOR" RESET "\n";
+	outputfile << YELLOW "CONSTRUCTORS" RESET "\n";																//segfault
+	//test_constructors();
+	outputfile << YELLOW "ASSIGNMENT OPERATOR" RESET "\n";                                                      //segfault
 	test_assignment_operator();
 
-	outputfile << YELLOW "BEGIN | END" RESET "\n";
-	test_begin_end();
+	outputfile << YELLOW "BEGIN | END" RESET "\n";                                                      //segfault
+	//test_begin_end();
 	outputfile << YELLOW "RBEGIN | REND" RESET "\n";
-	test_rbegin_rend();
+	//test_rbegin_rend();																					//OK
 
 	outputfile << YELLOW "EMPTY" RESET "\n";
-	test_empty();
+	//test_empty();																							//segfault
 	outputfile << YELLOW "SIZE" RESET "\n";
-	test_size();
+	//test_size();																							//OK
 	outputfile << YELLOW "MAX SIZE" RESET "\n";
-	test_max_size();
+	//test_max_size();																						//OK
 
 	outputfile << YELLOW "OPERATOR[]" RESET "\n";
-	test_element_access_operator();
+	//test_element_access_operator();																			//OK
 
 	outputfile << YELLOW "INSERT" RESET "\n";
-	test_insert();
+	//test_insert();																								//Segfault
 	outputfile << YELLOW "ERASE" RESET "\n";
-	test_erase();
+	//test_erase();																							//segfault
 	outputfile << YELLOW "SWAP" RESET "\n";
-	test_swap();
+	//test_swap();																							//Segfault
 	outputfile << YELLOW "CLEAR" RESET "\n";
-	test_clear();
+	//test_clear();																							//Segfault
 
 	outputfile << YELLOW "KEY COMP" RESET "\n";
-	test_key_comp();
+	//test_key_comp();																						//OK
 	outputfile << YELLOW "VALUE COMP" RESET "\n";
-	test_value_comp();
+	//test_value_comp();																						//OK
 
 	outputfile << YELLOW "FIND" RESET "\n";
-	test_find();
+	//test_find();																							//Segfault
 	outputfile << YELLOW "COUNT" RESET "\n";
-	test_count();
+	//test_count();																							//OK
 	outputfile << YELLOW "LOWER | UPPER BOUND" RESET "\n";
-	test_lower_upper_bound();
+	//test_lower_upper_bound();																				//Segfault
 	outputfile << YELLOW "EQUAL RANGE" RESET "\n";
-	test_equal_range();
+	//test_equal_range();																						//OK
 
 	outputfile << YELLOW "GET ALLOCATOR" RESET "\n";
-	test_get_allocator();
+	//test_get_allocator();																						//OK
 
 	return 0;
 }

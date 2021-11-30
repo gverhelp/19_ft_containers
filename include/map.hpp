@@ -16,7 +16,9 @@
 # include <memory>
 # include <functional>
 # include <utility>
+# include <iostream>
 # include "utils/utils.hpp"
+# include "utils/BTree.hpp"
 # include "utils/iterator.hpp"
 
 namespace ft
@@ -37,13 +39,10 @@ namespace ft
             typedef typename Allocator::pointer             pointer;
             typedef typename Allocator::const_pointer       const_pointer;
             typedef ft::Itmap< value_type >       			iterator;
-            typedef ft::Itmap< const value_type > 			const_iterator;
+            typedef ft::Itmap< value_type > 			    const_iterator;                     ///// remettre const
             typedef ft::reverse_iterator<iterator>          reverse_iterator;
             typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
-			typedef ft::Node<value_type>*					node_pointer;
-            typedef ft::Node<value_type>                    node_type;
-			typedef std::allocator< Node<value_type> >      node_allocator;
-            //typedef typename Allocator::template rebind< std::allocator< Node<value_type> > >::other allocator_type;
+            // typedef typename Allocator::template rebind< std::allocator< Node<value_type> > >::other allocator_type;
 
             //------------------- Value compare : classe imbriquée -------------------//
             class value_compare : ft::binary_function<value_type, value_type, bool>
@@ -65,57 +64,84 @@ namespace ft
             };
 
             //------------------- Member functions : Constructor / Destructor + operator = -------------------//
-            explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _alloc(alloc), _comp(comp), _size(0), _root(nullptr) {}                                                 /////// finir le constructor
+            explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _alloc(alloc), _comp(comp), _tree(BTree<key_type, mapped_type>()) {}                                                 /////// finir le constructor
             template <class InputIterator>
-            map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _alloc(alloc), _comp(comp), _size(0), _root(nullptr)                 /////// finir le constructor
+            map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _alloc(alloc), _comp(comp), _tree(BTree<key_type, mapped_type>())                 /////// finir le constructor
             {
                 this->insert(first, last);
             }
-            map (const map& x): _alloc(x._alloc), _comp(x._comp), _size(0), _root(nullptr) {
-				//this->insert(x.begin(), x.end());
-			}
-            ~map() { this->clear(); }                                                                                                                                                                                               /////// faire le destructor
+            map (const map& x): _alloc(x._alloc), _comp(x._comp), _tree(x._tree) {}
+            ~map() { /*_tree.clear(_tree.getRoot()); */}                                                                                                                                                                                               /////// faire le destructor
 
-            //map& operator=(const map& x) {}
+            map& operator=(const map& x)
+            {
+                iterator it = x.begin();
+                size_type i = 0;
+
+                if (this != &x)
+                {
+                    while (i < x.size())
+                    {
+                        this->insert(*it);
+                        it++;
+                        it++;
+                    }
+                    //this->clear();
+                    //this->insert(x._tree.firstNode(), x._tree.lastNode());
+                    this->_alloc = x._alloc;
+                    this->_comp = x._comp;
+                    this->_tree = x._tree;
+                }
+                return (*this);
+            }
 
             //------------------- Member functions : Iterators -------------------//
-            iterator begin() { return (iterator(this->firstNode())); }
-            const_iterator begin() const { return (const_iterator(this->firstNode())); }
-            iterator end() { return (iterator(this->lastNode())++); }
-            const_iterator end() const { return (const_iterator(this->lastNode())++); }
-            reverse_iterator rbegin() { return (reverse_iterator(this->lastNode())); }
-            const_reverse_iterator rbegin() const { return (const_reverse_iterator(this->lastNode())); }
-            reverse_iterator rend() { return (reverse_iterator(this->firstNode())); }
-            const_reverse_iterator rend() const { return (const_reverse_iterator(this->firstNode())); }
+            iterator begin() { return (iterator(_tree.firstNode(_tree.getRoot()))); }
+            const_iterator begin() const { return (const_iterator(_tree.firstNode(_tree.getRoot()))); }
+            iterator end() { return (iterator(_tree.lastNode(_tree.getRoot()))++); }
+            const_iterator end() const { return (const_iterator(_tree.getEnd())); }
+            reverse_iterator rbegin() { return (reverse_iterator(_tree.lastNode(_tree.getRoot()))); }
+            const_reverse_iterator rbegin() const { return (const_reverse_iterator(_tree.lastNode(_tree.getRoot()))); }
+            reverse_iterator rend() { return (reverse_iterator(_tree.firstNode(_tree.getRoot()))); }
+            const_reverse_iterator rend() const { return (const_reverse_iterator(_tree.firstNode(_tree.getRoot()))); }
 
             //------------------- Member functions : Capacity -------------------//
             bool empty() const
             {
-                if (this->_size == 0)
+                if (_tree.getSize() == 0)
                     return (true);
                 return (false);
             }
-            size_type size() const { return (this->_size); }
+            size_type size() const { return (_tree.getSize()); }
             size_type max_size() const { return (allocator_type().max_size()); }
 
             //------------------- Member functions : Element access -------------------//
             mapped_type& operator[] (const key_type& k)
 			{
-				iterator it(this->search(k));
- 
-				return (it->second);
+                ft::Node<value_type>* ptr = _tree.search(k);
+
+                if (ptr == u_nullptr)
+                    ptr = _tree.insertNode(ft::make_pair<key_type, mapped_type>(k, mapped_type()));
+                //std::cout << &ptr->data.second << std::endl;
+				return (ptr->data.second);
 			}
 
             //------------------- Member functions : Modifiers -------------------//	
 
             pair<iterator,bool> insert(const value_type& val)
             {
-				return (this->insertNode(val));
+                ft::Node<value_type>*   ptr;
+                bool                    find = true;
+
+                ptr = _tree.insertNode(val);
+                if (ptr == u_nullptr)
+                    find = false;
+				return (ft::make_pair<iterator, bool>(iterator(ptr), find));
             }
             iterator insert (iterator position, const value_type& val)
             {
                 (void)position;                                                                                                         ////// utilser it position
-                return (iterator(this->insertNode(val).first));
+                return (iterator(_tree.insertNode(val)));
             }	
             template <class InputIterator>
             void insert (InputIterator first, InputIterator last)
@@ -129,7 +155,7 @@ namespace ft
                     return ;
                 while (first <= last)
                 {
-                    this->insertNode(*begin);
+                    _tree.insertNode(*begin);
                     first++;
                 }
             }
@@ -144,12 +170,12 @@ namespace ft
                 }
                 if (it == position)
                 {
-                    this->deleteNode((*it).first);
+                    _tree.deleteNode(it.base(), it->first);
                 }
             }	
             size_type erase(const key_type& key)
             {
-				return (this->deleteNode(key));
+				return (_tree.deleteNode(_tree.getRoot(), key));
             }
             void erase(iterator first, iterator last)
             {
@@ -157,25 +183,19 @@ namespace ft
                     return ;
                 while (first <= last)
                 {
-                    this->deleteNode((*first).first);
+                    _tree.deleteNode(first.base(), (*first).first);
                     first++;
                 }
             }
 
-            void swap (map& x)                                                                           ////// remplacer BTree par un pointer sur root dans map
+            void swap (map& x)                                                                           ////// remplacer BTree par un pointer sur tree dans map
             {
-                size_t          swap_size;
-                node_pointer    swap_root;
-
-                swap_size = x._size;
-                swap_root = x._root;
-                x._size = this->_size;
-                x._root = this->_root;
+                _tree.swap(x._tree);
             }
             
             void clear()
 			{
-				this->recurClear(this->_root);
+				_tree.clear(_tree.getRoot());
 			}
 
             //------------------- Member functions : Observers -------------------//
@@ -189,12 +209,12 @@ namespace ft
             }
 
             //------------------- Member functions : Operations -------------------//
-            iterator find (const key_type& k) { return (iterator(this->search(k))); }
-            const_iterator find (const key_type& k) const { return (iterator(this->search(k))); }
+            iterator find (const key_type& k) { return (iterator(_tree.search(k))); }
+            const_iterator find (const key_type& k) const { return (iterator(_tree.search(k))); }
 
             size_type count (const key_type& k) const
             {
-                if (this->search(k) == nullptr)
+                if (_tree.search(k) == u_nullptr)
                     return (0);
                 return (1);
             }
@@ -245,391 +265,15 @@ namespace ft
             //------------------- Member functions : Allocator -------------------//
             allocator_type get_allocator() const { return (allocator_type()); }
 
+            void debug()                                                                                                                ///// enlever
+            {
+                _tree.printHelper(_tree.getRoot(), "", true);
+            }
+
         private:
             allocator_type                              _alloc;
             key_compare                                 _comp;
-            size_type                                   _size;     ///// mettre à jour size partout
-            node_pointer                                _root;     ///// mettre à jour root partout
-
-			node_pointer minimum(node_pointer node)
-			{
-				while (node->left != nullptr)
-				{
-					node = node->left;
-				}
-				return (node);
-			}
-			void rbTransplant(node_pointer u, node_pointer v)
-			{
-				if (u->parent == nullptr)
-				{
-					_root = v;
-				}
-				else if (u == u->parent->left)
-				{
-					u->parent->left = v;
-				}
-				else
-				{
-					u->parent->right = v;
-				}
-				v->parent = u->parent;
-			}
-
-			void rightRotate(node_pointer x)
-			{
-				node_pointer y = x->left;
-				x->left = y->right;
-				if (y->right != nullptr)
-				{
-					y->right->parent = x;
-				}
-				y->parent = x->parent;
-				if (x->parent == nullptr)
-				{
-					this->_root = y;
-				}
-				else if (x == x->parent->right)
-				{
-					x->parent->right = y;
-				}
-				else
-				{
-					x->parent->left = y;
-				}
-				y->right = x;
-				x->parent = y;
-			}
-
-			void leftRotate(node_pointer x)
-			{
-				node_pointer y = x->right;
-				x->right = y->left;
-				if (y->left != nullptr)
-				{
-					y->left->parent = x;
-				}
-				y->parent = x->parent;
-				if (x->parent == nullptr)
-				{
-					this->_root = y;
-				}
-				else if (x == x->parent->left)
-				{
-					x->parent->left = y;
-				}
-				else
-				{
-					x->parent->right = y;
-				}
-				y->left = x;
-				x->parent = y;
-			}
-
-			void rebalDelete(node_pointer x)
-			{
-				node_pointer s;
-				while (x != _root && x->color == 0)
-				{
-					if (x == x->parent->left)
-					{
-						s = x->parent->right;
-						if (s->color == 1)
-						{
-							// case 3.1
-							s->color = 0;
-							x->parent->color = 1;
-							leftRotate(x->parent);
-							s = x->parent->right;
-						}
-
-						if (s->left->color == 0 && s->right->color == 0)
-						{
-							// case 3.2
-							s->color = 1;
-							x = x->parent;
-						}
-						else
-						{
-							if (s->right->color == 0)
-							{
-								// case 3.3
-								s->left->color = 0;
-								s->color = 1;
-								rightRotate(s);
-								s = x->parent->right;
-							}
-
-							// case 3.4
-							s->color = x->parent->color;
-							x->parent->color = 0;
-							s->right->color = 0;
-							leftRotate(x->parent);
-							x = _root;
-						}
-					}
-					else
-					{
-						s = x->parent->left;
-						if (s->color == 1)
-						{
-							// case 3.1
-							s->color = 0;
-							x->parent->color = 1;
-							rightRotate(x->parent);
-							s = x->parent->left;
-						}
-
-						if (s->right->color == 0 && s->right->color == 0)
-						{
-							// case 3.2
-							s->color = 1;
-							x = x->parent;
-						}
-						else
-						{
-							if (s->left->color == 0)
-							{
-								// case 3.3
-								s->right->color = 0;
-								s->color = 1;
-								leftRotate(s);
-								s = x->parent->left;
-							}
-
-							// case 3.4
-							s->color = x->parent->color;
-							x->parent->color = 0;
-							s->left->color = 0;
-							rightRotate(x->parent);
-							x = _root;
-						}
-					}
-				}
-				x->color = 0;
-			}
-            size_type deleteNode(const key_type& key)
-            {
-				// find the node containing key
-				node_pointer z = nullptr;
-				node_pointer x, y;
-				node_pointer node = this->_root;
-				while (node != nullptr)
-				{
-					if (node->data.first == key)
-					{
-						z = node;
-					}
-					if (node->data.first <= key)
-					{
-						node = node->right;
-					}
-					else
-					{
-						node = node->left;
-					}
-				}
-				if (z == nullptr)
-				{
-					//std::cout << "Couldn't find key in the tree" << std::endl;
-					return 0;
-				}
-				y = z;
-				int y_original_color = y->color;
-				if (z->left == nullptr)
-				{
-					x = z->right;
-					rbTransplant(z, z->right);
-				}
-				else if (z->right == nullptr)
-				{
-					x = z->left;
-					rbTransplant(z, z->left);
-				}
-				else
-				{
-					y = minimum(z->right);
-					y_original_color = y->color;
-					x = y->right;
-					if (y->parent == z)
-					{
-						x->parent = y;
-					}
-					else
-					{
-						rbTransplant(y, y->right);
-						y->right = z->right;
-						y->right->parent = y;
-					}
-
-					rbTransplant(z, y);
-					y->left = z->left;
-					y->left->parent = y;
-					y->color = z->color;
-				}
-				_size--;
-				node_allocator().destroy(z);
-				node_allocator().deallocate(z, 1);
-				z = nullptr;
-				if (y_original_color == 0)
-				{
-					rebalDelete(x);
-				}
-				return (1);
-            }
-			void rebalInsert(node_pointer toInsert)
-            {
-				/*Rebalance*/
-                node_pointer tmp;
-
-				if (toInsert->parent->parent == nullptr)
-					return ;
-                while (toInsert->parent->color == 1)
-				{
-					if (toInsert->parent == toInsert->parent->parent->right)
-					{
-						tmp = toInsert->parent->parent->left; // uncle
-						if (tmp->color == 1)
-						{
-							// case 3.1
-							tmp->color = 0;
-							toInsert->parent->color = 0;
-							toInsert->parent->parent->color = 1;
-							toInsert = toInsert->parent->parent;
-						}
-						else
-						{
-							if (toInsert == toInsert->parent->left)
-							{
-								// case 3.2.2
-								toInsert = toInsert->parent;
-								rightRotate(toInsert);
-							}
-							// case 3.2.1
-							toInsert->parent->color = 0;
-							toInsert->parent->parent->color = 1;
-							leftRotate(toInsert->parent->parent);
-						}
-					}
-					else
-					{
-						tmp = toInsert->parent->parent->right; // uncle
-						if (tmp->color == 1)
-						{
-							// mirror case 3.1
-							tmp->color = 0;
-							toInsert->parent->color = 0;
-							toInsert->parent->parent->color = 1;
-							toInsert = toInsert->parent->parent;	
-						}
-						else
-						{
-							if (toInsert == toInsert->parent->right)
-							{
-								// mirror case 3.2.2
-								toInsert = toInsert->parent;
-								leftRotate(toInsert);
-							}
-							// mirror case 3.2.1
-							toInsert->parent->color = 0;
-							toInsert->parent->parent->color = 1;
-							rightRotate(toInsert->parent->parent);
-						}
-					}
-					if (toInsert == _root)
-					{
-						break;
-					}
-				}
-				this->_root->color = 0;
-            }
-			pair<iterator,bool> insertNode(const value_type& val)
-			{
-                node_pointer tmp = this->_root;
-                node_pointer parent = nullptr;
-
-                while (tmp)
-                {
-                    parent = tmp;
-                    if (val.first < tmp->data.first)
-                        tmp = tmp->left;
-                    else
-                        tmp = tmp->right;
-                }
-                if (parent && (val.first == parent->data.first))
-                    return (ft::make_pair<iterator, bool>(iterator(parent), false));
-                node_pointer toInsert = node_allocator().allocate(1);
-				node_allocator().construct(toInsert, node_type(ft::pair<key_type, mapped_type>(val.first, val.second)));
-                // /toInsert->data = ft::pair<key_type, mapped_type>(val.first, val.second);												/////// MAKE_PAIR
-                toInsert->parent = parent;
-                toInsert->left = nullptr;
-                toInsert->right = nullptr;
-                toInsert->color = 1;
-				_size++;
-                if (!this->_root)
-                {
-					toInsert->color = 0;
-                    this->_root = toInsert;
-                    return (ft::make_pair<iterator, bool>(iterator(this->_root), true));
-                }
-                else if (toInsert->data.first < parent->data.first)
-                    parent->left = toInsert;
-                else
-                    parent->right = toInsert;
-                rebalInsert(toInsert);
-                return (ft::make_pair<iterator, bool>(iterator(toInsert), true));
-			}
-            node_pointer search(const key_type& key) const
-            {
-                node_pointer tmp = this->_root;
-
-                while (tmp)
-                {
-                    if (tmp->data.first == key)
-                        return (tmp);
-                    else if (key < tmp->data.first)
-                    {
-                        tmp = tmp->left;
-                    }
-                    else
-                    {
-                        tmp = tmp->right;
-                    }   
-                }
-                return (nullptr);
-            }
-			node_pointer lastNode()
-			{
-				node_pointer last = this->_root;
-
-				while (last && last->right != nullptr)
-					last = last->right;
-				return (last);
-			}
-
-			node_pointer firstNode() const
-			{
-				node_pointer first = this->_root;
-
-				while (first && first->left != nullptr)
-					first = first->left;
-				return (first);
-			}
-			void recurClear(node_pointer node)
-			{
-				if (node == nullptr)
-					return ;
-			
-				/* first delete both subtrees */
-				recurClear(node->left);
-				recurClear(node->right);
-				
-				/* then delete the node */
-				//std::cout << "\n Deleting node: " << node->data;
-				node_allocator().destroy(node);
-				node_allocator().deallocate(node, 1);
-				node = nullptr;
-			}
+			ft::BTree<key_type, mapped_type>			_tree;
     };
 
     //------------------- Non-member functions -------------------//
