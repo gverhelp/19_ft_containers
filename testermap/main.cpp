@@ -44,51 +44,51 @@ int main(void)
 	else
 		outputfile.open("output.std.out");
 	
-	outputfile << YELLOW "CONSTRUCTORS" RESET "\n";																//segfault
+	outputfile << YELLOW "CONSTRUCTORS" RESET "\n";
 	//test_constructors();
-	outputfile << YELLOW "ASSIGNMENT OPERATOR" RESET "\n";                                                      //segfault
-	test_assignment_operator();
+	outputfile << YELLOW "ASSIGNMENT OPERATOR" RESET "\n";
+	//test_assignment_operator();
 
-	outputfile << YELLOW "BEGIN | END" RESET "\n";                                                      //segfault
+	outputfile << YELLOW "BEGIN | END" RESET "\n";
 	//test_begin_end();
 	outputfile << YELLOW "RBEGIN | REND" RESET "\n";
-	//test_rbegin_rend();																					//OK
+	test_rbegin_rend();																					//DIFF
 
 	outputfile << YELLOW "EMPTY" RESET "\n";
-	//test_empty();																							//segfault
+	//test_empty();
 	outputfile << YELLOW "SIZE" RESET "\n";
-	//test_size();																							//OK
+	//test_size();
 	outputfile << YELLOW "MAX SIZE" RESET "\n";
-	//test_max_size();																						//OK
+	//test_max_size();
 
 	outputfile << YELLOW "OPERATOR[]" RESET "\n";
-	//test_element_access_operator();																			//OK
+	//test_element_access_operator();
 
 	outputfile << YELLOW "INSERT" RESET "\n";
-	//test_insert();																								//Segfault
+	//test_insert();
 	outputfile << YELLOW "ERASE" RESET "\n";
-	//test_erase();																							//segfault
+	//test_erase();
 	outputfile << YELLOW "SWAP" RESET "\n";
-	//test_swap();																							//Segfault
+	//test_swap();
 	outputfile << YELLOW "CLEAR" RESET "\n";
-	//test_clear();																							//Segfault
+	//test_clear();
 
 	outputfile << YELLOW "KEY COMP" RESET "\n";
-	//test_key_comp();																						//OK
+	//test_key_comp();																						//DIFF
 	outputfile << YELLOW "VALUE COMP" RESET "\n";
-	//test_value_comp();																						//OK
+	//test_value_comp();																					//DIFF
 
 	outputfile << YELLOW "FIND" RESET "\n";
-	//test_find();																							//Segfault
+	//test_find();																							//DIFF
 	outputfile << YELLOW "COUNT" RESET "\n";
-	//test_count();																							//OK
+	//test_count();
 	outputfile << YELLOW "LOWER | UPPER BOUND" RESET "\n";
-	//test_lower_upper_bound();																				//Segfault
+	//test_lower_upper_bound();																				//DIFF
 	outputfile << YELLOW "EQUAL RANGE" RESET "\n";
-	//test_equal_range();																						//OK
+	//test_equal_range();																						//DIFF
 
 	outputfile << YELLOW "GET ALLOCATOR" RESET "\n";
-	//test_get_allocator();																						//OK
+	//test_get_allocator();
 
 	return 0;
 }
@@ -254,18 +254,18 @@ void test_insert(void)
 		outputfile << "element 'z' already existed";
 		outputfile << " with a value of " << ret.first->second << '\n';
 	}
-
+	
 	// second insert function version (with hint position):
 	NAMESPACE::map<char, int>::iterator it = mymap.begin();
 	mymap.insert(it, NAMESPACE::pair<char, int>('b', 300)); // max efficiency inserting
 	mymap.insert(it, NAMESPACE::pair<char, int>('c', 400)); // no max efficiency inserting
 	outputfile << "size:\n"
 			  << mymap.size() << '\n';
-
+	
 	// third insert function version (range insertion):
 	NAMESPACE::map<char, int> anothermap;
 	anothermap.insert(mymap.begin(), mymap.find('c'));
-
+	
 	// showing contents:
 	outputfile << "mymap contains:\n";
 	for (it = mymap.begin(); it != mymap.end(); ++it)
@@ -291,9 +291,9 @@ void test_erase(void)
 
 	it = mymap.find('b');
 	mymap.erase(it); // erasing by iterator
-
+	
 	mymap.erase('c'); // erasing by key
-
+	
 	it = mymap.find('e');
 	mymap.erase(it, mymap.end()); // erasing by range
 

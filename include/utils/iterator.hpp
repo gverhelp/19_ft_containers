@@ -232,15 +232,20 @@ namespace ft
 
             operator Itmap< const T >() const { return (Itmap< const T>(this->_node)); }
 
-            Itmap(node_pointer node = nullptr): _node(node) {}
+			Itmap() : _node(u_nullptr), _end(u_nullptr) {}
+            Itmap(node_pointer node, node_pointer end ): _node(node), _end(end) {}
             template < class U >
-            Itmap(const Itmap<U>& cpy): _node(cpy.base()) {}
+            Itmap(const Itmap<U>& cpy): _node(cpy._node), _end(cpy._end) {}
             ~Itmap() {}
             template < class U >
             Itmap& operator=(const Itmap<U>& copy)
             {
                 if (this != &copy)
-                    this->_node = copy.base();
+				{
+                    this->_node = copy._node;
+					this->_end = copy._end;
+					this->_comp = copy._comp;
+				}
                 return (*this);
             }
 
@@ -282,37 +287,33 @@ namespace ft
 			Itmap& operator++(void)
 			{
 				node_pointer cursor = _node;
-                node_pointer _last_node = _node;
-                node_pointer tmp = _last_node;
-
-                while (tmp->parent)
-                {
-                    tmp = tmp->parent;
-                }
-                while (tmp)
-                {
-                    _last_node = tmp;
-                    tmp = tmp->right;
-                }
-				if (_node->right == _last_node)
+				
+				if (_node->right == _end)
 				{
 					cursor = _node->parent;
-					while (cursor != _last_node
+					while (cursor != u_nullptr && cursor != _end
 						&& cursor->data.first < _node->data.first)
 						cursor = cursor->parent;
-					_node = cursor;
+					if (cursor == 0)
+						_node = _end;
+					else
+						_node = cursor;
 				}
-				else if (cursor == _last_node)
-					_node = _last_node->right;
+				else if (cursor == _end)
+				{
+					_node = _end;
+				}
 				else
 				{
 					cursor = _node->right;
-					if (cursor == _last_node->parent
-						&& cursor->right == _last_node)
+					if (cursor == _end->parent
+						&& cursor->right == _end)
+					{
 						_node = cursor;
+					}
 					else
 					{
-						while (cursor->left != _last_node)
+						while (cursor->left != _end)
 							cursor = cursor->left;
 					}
 					_node = cursor;
@@ -331,38 +332,36 @@ namespace ft
 			Itmap& operator--(void)
 			{
 				node_pointer cursor = _node;
-                node_pointer _last_node = _node;
-                node_pointer tmp = _last_node;
-
-                while (tmp->parent)
-                {
-                    tmp = tmp->parent;
-                }
-                while (tmp)
-                {
-                    _last_node = tmp;
-                    tmp = tmp->right;
-                }
-				if (_node->left == _last_node)
+               	
+				if (_node->left == _end)
 				{
 					cursor = _node->parent;
-					while (cursor != _last_node
+					while (cursor != u_nullptr && cursor != _end
 						&& cursor->data.first > _node->data.first)
+					{
 						cursor = cursor->parent;
+					}
 					_node = cursor;
+					if (cursor == 0)
+						_node = _end;
+					else
+						_node = cursor;
+
 				}
-				else if (cursor == _last_node)
-					_node = _last_node->right;
+				else if (cursor == _end)
+					_node = _end->left;
 				else
 				{
 					cursor = _node->left;
-					if (cursor == _last_node->parent
-						&& cursor->left == _last_node)
+					if (cursor == _end->parent
+						&& cursor->left == _end)
 						_node = cursor;
 					else
 					{
-						while (cursor->right != _last_node)
+						while (cursor->right != _end)
+						{
 							cursor = cursor->right;
+						}
 					}
 					_node = cursor;
 				}
@@ -377,7 +376,9 @@ namespace ft
                 return (tmp);
             }
         private :
-            node_pointer _node;
+            node_pointer 	_node;
+			node_pointer	_end;
+			
     };
 
     //-------------------- Itmap non-member functions --------------------//
@@ -389,22 +390,24 @@ namespace ft
     bool operator!=(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.base() != rhs.base()); }
     template < class T, class T2 >
     bool operator!=(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs.base() != rhs.base()); }
+	/*
     template < class T >
-    bool operator<(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.base() < rhs.base()); }
+    bool operator<(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs->first < rhs->first); }
     template < class T, class T2 >
-    bool operator<(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs.base() < rhs.base()); }
+    bool operator<(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs->first < rhs->first); }
     template < class T >
-    bool operator<=(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.base() <= rhs.base()); }
+    bool operator<=(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs->first <= rhs->first); }
     template < class T, class T2 >
-    bool operator<=(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs.base() <= rhs.base()); }
+    bool operator<=(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs->first <= rhs->first); }
     template < class T >
-    bool operator>(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.base() > rhs.base()); }
+    bool operator>(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs->first > rhs->first); }
     template < class T, class T2 >
-    bool operator>(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs.base() > rhs.base()); }
+    bool operator>(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs->first > rhs->first); }
     template < class T >
-    bool operator>=(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.base() >= rhs.base()); }
+    bool operator>=(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs->first >= rhs->first); }
     template < class T, class T2 >
-    bool operator>=(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs.base() >= rhs.base()); }
+    bool operator>=(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs->first >= rhs->first); }
+	*/
 }
 
 #endif

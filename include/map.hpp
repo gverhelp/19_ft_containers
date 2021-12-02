@@ -6,7 +6,7 @@
 /*   By: pmaldagu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 13:43:00 by pmaldagu          #+#    #+#             */
-/*   Updated: 2021/11/29 13:34:16 by pmaldagu         ###   ########.fr       */
+/*   Updated: 2021/12/02 17:44:32 by pmaldagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ namespace ft
             typedef const value_type&                       const_reference;
             typedef typename Allocator::pointer             pointer;
             typedef typename Allocator::const_pointer       const_pointer;
-            typedef ft::Itmap< value_type >       			iterator;
-            typedef ft::Itmap< value_type > 			    const_iterator;                     ///// remettre const
+            typedef ft::Itmap< value_type >    				iterator;
+            typedef ft::Itmap< value_type > 				const_iterator;                     ///// remettre const
             typedef ft::reverse_iterator<iterator>          reverse_iterator;
             typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
             // typedef typename Allocator::template rebind< std::allocator< Node<value_type> > >::other allocator_type;
@@ -70,24 +70,18 @@ namespace ft
             {
                 this->insert(first, last);
             }
-            map (const map& x): _alloc(x._alloc), _comp(x._comp), _tree(x._tree) {}
+            map (const map& x): _alloc(x._alloc), _comp(x._comp), _tree(BTree<key_type, mapped_type>()) 
+			{
+				this->insert(x.begin(), x.end());
+			}
             ~map() { /*_tree.clear(_tree.getRoot()); */}                                                                                                                                                                                               /////// faire le destructor
 
             map& operator=(const map& x)
             {
-                iterator it = x.begin();
-                size_type i = 0;
-
                 if (this != &x)
                 {
-                    while (i < x.size())
-                    {
-                        this->insert(*it);
-                        it++;
-                        it++;
-                    }
-                    //this->clear();
-                    //this->insert(x._tree.firstNode(), x._tree.lastNode());
+                    this->clear();
+                    this->insert(x.begin(), x.end());
                     this->_alloc = x._alloc;
                     this->_comp = x._comp;
                     this->_tree = x._tree;
@@ -96,20 +90,22 @@ namespace ft
             }
 
             //------------------- Member functions : Iterators -------------------//
-            iterator begin() { return (iterator(_tree.firstNode(_tree.getRoot()))); }
-            const_iterator begin() const { return (const_iterator(_tree.firstNode(_tree.getRoot()))); }
-            iterator end() { return (iterator(_tree.lastNode(_tree.getRoot()))++); }
-            const_iterator end() const { return (const_iterator(_tree.getEnd())); }
-            reverse_iterator rbegin() { return (reverse_iterator(_tree.lastNode(_tree.getRoot()))); }
-            const_reverse_iterator rbegin() const { return (const_reverse_iterator(_tree.lastNode(_tree.getRoot()))); }
-            reverse_iterator rend() { return (reverse_iterator(_tree.firstNode(_tree.getRoot()))); }
-            const_reverse_iterator rend() const { return (const_reverse_iterator(_tree.firstNode(_tree.getRoot()))); }
+            iterator begin() { return (iterator(_tree.firstNode(), _tree.getEnd())); }
+            const_iterator begin() const { return (const_iterator(_tree.firstNode(), _tree.getEnd())); }
+            iterator end() { return (iterator(_tree.getEnd(), _tree.getEnd())); }
+            const_iterator end() const { return (const_iterator(_tree.getEnd(), _tree.getEnd())); }
+            reverse_iterator rbegin() { return (reverse_iterator(iterator(_tree.lastNode(), _tree.getEnd()))); }
+            const_reverse_iterator rbegin() const { return (const_reverse_iterator(iterator(_tree.lastNode(), _tree.getEnd()))); }
+            reverse_iterator rend() { return (reverse_iterator(this->begin())); }
+            const_reverse_iterator rend() const { return (const_reverse_iterator(this->begin())); }
 
             //------------------- Member functions : Capacity -------------------//
             bool empty() const
             {
                 if (_tree.getSize() == 0)
+				{
                     return (true);
+				}
                 return (false);
             }
             size_type size() const { return (_tree.getSize()); }
@@ -122,7 +118,6 @@ namespace ft
 
                 if (ptr == u_nullptr)
                     ptr = _tree.insertNode(ft::make_pair<key_type, mapped_type>(k, mapped_type()));
-                //std::cout << &ptr->data.second << std::endl;
 				return (ptr->data.second);
 			}
 
@@ -133,29 +128,26 @@ namespace ft
                 ft::Node<value_type>*   ptr;
                 bool                    find = true;
 
+				if ((ptr = _tree.search(val.first)) != u_nullptr)
+					find = false;
                 ptr = _tree.insertNode(val);
-                if (ptr == u_nullptr)
-                    find = false;
-				return (ft::make_pair<iterator, bool>(iterator(ptr), find));
+				return (ft::make_pair<iterator, bool>(iterator(ptr, _tree.getEnd()), find));
             }
             iterator insert (iterator position, const value_type& val)
             {
                 (void)position;                                                                                                         ////// utilser it position
-                return (iterator(_tree.insertNode(val)));
+                return (iterator(_tree.insertNode(val), _tree.getEnd()));
             }	
             template <class InputIterator>
             void insert (InputIterator first, InputIterator last)
             {
-				iterator begin;
-				iterator end;
+				//map cpy(first, last);
 
-				begin = first;
-				end = last;
-                if (begin->first > last->first)
-                    return ;
-                while (first <= last)
+				//first = cpy.begin();
+				//last = cpy.end();
+                while (first != last)
                 {
-                    _tree.insertNode(*begin);
+                    _tree.insertNode(*first);
                     first++;
                 }
             }
@@ -164,38 +156,39 @@ namespace ft
             {
                 iterator it;
 
-                while (it < position)
+				it = this->begin();
+                while (it != position)
                 {
                     it++;
                 }
                 if (it == position)
-                {
                     _tree.deleteNode(it.base(), it->first);
-                }
             }	
             size_type erase(const key_type& key)
             {
 				return (_tree.deleteNode(_tree.getRoot(), key));
             }
             void erase(iterator first, iterator last)
-            {
-                if ((*first).first > (*last).first)
-                    return ;
-                while (first <= last)
+          	{ 
+                //if ((*first).first > (*last).first)
+                //    return ;
+				map cpy(first, last);
+
+				first = cpy.begin();
+				last = cpy.end();
+                while (first != last)
                 {
-                    _tree.deleteNode(first.base(), (*first).first);
+                    _tree.deleteNode(_tree.getRoot(), first->first);
                     first++;
                 }
             }
-
             void swap (map& x)                                                                           ////// remplacer BTree par un pointer sur tree dans map
             {
                 _tree.swap(x._tree);
             }
-            
             void clear()
 			{
-				_tree.clear(_tree.getRoot());
+				erase(begin(), end());
 			}
 
             //------------------- Member functions : Observers -------------------//
@@ -209,8 +202,22 @@ namespace ft
             }
 
             //------------------- Member functions : Operations -------------------//
-            iterator find (const key_type& k) { return (iterator(_tree.search(k))); }
-            const_iterator find (const key_type& k) const { return (iterator(_tree.search(k))); }
+            iterator find (const key_type& k) 
+			{	
+				ft::Node<value_type>*   find;
+
+				if ((find = _tree.search(k)) == u_nullptr)
+					find = _tree.getEnd();
+				return (iterator(find, _tree.getEnd()));
+			}
+            const_iterator find (const key_type& k) const 
+			{ 				
+				ft::Node<value_type>*   find;
+				
+				if ((find = _tree.search(k)) == u_nullptr)
+					find = _tree.getEnd();
+				return (iterator(find, _tree.getEnd())); 
+			}
 
             size_type count (const key_type& k) const
             {

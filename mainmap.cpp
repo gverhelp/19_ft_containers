@@ -33,12 +33,13 @@ int main()
 	/*Test map*/
 	ft::map<int, std::string> mapp;
 	ft::map<char, int>::iterator it;
+	ft::map<char, int>::iterator it2;
 
 	//it++;
 	//it++;
 
-	ft::pair<int, std::string> p1(1, "foo");
-	ft::pair<int, std::string> p2(2, "xd");
+	//ft::pair<int, std::string> p1(1, "foo");
+	//ft::pair<int, std::string> p2(2, "xd");
 //	mapp.insert(p1);
 //	mapp.insert(p2);
 
@@ -75,16 +76,22 @@ int main()
 	first['n'] = 70;
 	first['o'] = 80;
 	it = first.begin();
+	it2 = first.end();
 	first.debug();
-	// while (i < 4)
-	// {
-	// 	std::cout << it->first << std::endl;
-	// 	std::cout << it->second << std::endl;
-	// 	it++;
-	// 	i++;
-	// }
-	// it = first.end();
-	// std::cout << it->first << std::endl;
-	// std::cout << it->second << std::endl;
+	std::cout << "lol meuh : " << it2.base() << std::endl;
+	 while (it != it2)
+	 {
+	 	std::cout << it->first << std::endl;
+	 	std::cout << it->second << std::endl;
+	 	it++;
+		std::cout << "it.nase : " << it.base() << std::endl;
+	 	//i++;
+	 }
+	 //it = first.end();
+	 std::cout << it2->first << std::endl;
+	 std::cout << it2->second << std::endl;
+
+	//end = last_elem++;
+	//last_node;
 	return 0;
 }

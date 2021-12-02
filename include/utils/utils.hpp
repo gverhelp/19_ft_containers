@@ -54,7 +54,7 @@ namespace ft
         template<class U, class V>
         pair (const pair<U,V>& pr): first(pr.first), second(pr.second) {}
         pair (const first_type& a, const second_type& b): first(a), second(b) {}
-        pair& operator=(const pair& pr)
+        /*pair& operator=(const pair& pr)
         {
             if (this != &pr)
             {
@@ -62,7 +62,7 @@ namespace ft
                 second = pr.second;
             }
             return (*this);
-        }
+        }*/  					//////linux thing (chez moi ca marche pierre sale fdp)
     };
 
     // Non member pair //

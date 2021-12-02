@@ -37,6 +37,7 @@ namespace ft
                 end->right = u_nullptr;
                 end->color = 0;
                 root = end;
+				size = 0;
             }
             BTree(const BTree& cpy): root(cpy.root), end(cpy.end), size(cpy.size)
             {
@@ -61,8 +62,10 @@ namespace ft
             //------------------- Member functions -------------------//
             node_pointer insertNode(const value_type& val) 
             {
-                if (search(val.first) != u_nullptr)
-                    return u_nullptr;
+				node_pointer find;
+
+                if ((find = search(val.first)) != u_nullptr)
+                    return (find);
                 node_pointer node = node_allocator().allocate(1);
 				node_allocator().construct(node, node_type(val));
                 node->parent = u_nullptr;
@@ -102,13 +105,16 @@ namespace ft
                 if (node->parent == u_nullptr)
                 {
                     node->color = 0;
+					indexEnd();
                     return (node);
                 }
                 if (node->parent->parent == u_nullptr)
                 {
+					indexEnd();
                     return (node);
                 }
                 rebalInsert(node);
+				indexEnd();
                 return (node);
             }
 
@@ -125,6 +131,7 @@ namespace ft
             {
                 node_pointer z = end;
                 node_pointer x, y;
+
                 while (node != end)
                 {
                     if (node->data.first == key)
@@ -141,9 +148,7 @@ namespace ft
                     }
                 }
                 if (z == end)
-                {
                     return 0;
-                } 
                 y = z;
                 int y_original_color = y->color;
                 if (z->left == end)
@@ -158,13 +163,11 @@ namespace ft
                 }
                 else
                 {
-                    y = firstNode(z->right);
+                    y = minimum(z->right);
                     y_original_color = y->color;
                     x = y->right;
                     if (y->parent == z)
-                    {
                         x->parent = y;
-                    }
                     else
                     {
                         rbTransplant(y, y->right);
@@ -183,12 +186,13 @@ namespace ft
                 {
                     rebalDelete(x);
                 }
+				indexEnd();
                 return (1);
             }
 
 			void clear(node_pointer node)
 			{
-				if (node == u_nullptr)
+				if (node == end)
 					return ;
 			
 				/* first delete both subtrees */
@@ -206,7 +210,7 @@ namespace ft
             {
                 node_pointer tmp = this->root;
 
-                while (tmp)
+                while (tmp != end)
                 {
                     if (tmp->data.first == key)
                         return (tmp);
@@ -238,52 +242,77 @@ namespace ft
                 this->root = swap_root;
                 this->end = swap_end;
             }
-            node_pointer firstNode(node_pointer node) const
+            node_pointer firstNode() const
             {
-                while (node->left != end)
+				node_pointer tmp = root;
+	
+				if (tmp == end)
+					return (end);
+                while (tmp->left != end)
                 {
-                    node = node->left;
+                    tmp = tmp->left;
                 }
-                return node;
+                return tmp;
             }
-            node_pointer lastNode(node_pointer node)
+            node_pointer lastNode()
             {
-                while (node->right != end)
-                {
-                    node = node->right;
-                }
-                return (node);
-            }
+				node_pointer tmp = root;
 
-            node_pointer getEnd() const { return (this->end); }
+				if (tmp == end)
+					return (end);
+                while (tmp->right != end)
+                {
+                    tmp = tmp->right;
+                }
+                return (tmp);
+            }
+			
+			node_pointer getEnd() const { return (this->end); }
             node_pointer getRoot() const { return (this->root); }
             size_type getSize() const { return (this->size); }
 
-                                                                                                                void printHelper(node_pointer root, std::string indent, bool last) {
-                                                                                                                    // print the tree structure on the screen
-                                                                                                                    if (root != end) {
-                                                                                                                    std::cout<<indent;
-                                                                                                                    if (last) {
-                                                                                                                        std::cout<<"R----";
-                                                                                                                        indent += "     ";
-                                                                                                                    } else {
-                                                                                                                        std::cout<<"L----";
-                                                                                                                        indent += "|    ";
-                                                                                                                    }
-                                                                                                                        
-                                                                                                                    std::string sColor = root->color?"RED":"BLACK";
-                                                                                                                    std::cout<<root->data.first<<"("<<sColor<<")"<<std::endl;
-                                                                                                                    printHelper(root->left, indent, false);
-                                                                                                                    printHelper(root->right, indent, true);
-                                                                                                                    }
-                                                                                                                    // std::cout<<root->left->data<<std::endl;
-                                                                                                                }
+            void printHelper(node_pointer root, std::string indent, bool last)
+            {
+                // print the tree structure on the screen
+                if (root != end)
+                {
+                    std::cout<<indent;
+                    if (last)
+                    {
+                        std::cout<<"R----";
+                        indent += "     ";
+                    }
+                    else
+                    {
+                        std::cout<<"L----";
+                        indent += "|    ";
+                    }
+                    std::string sColor = root->color?"RED":"BLACK";
+                    std::cout<<root->data.first<<"("<<sColor<<")"<<std::endl;
+                    printHelper(root->left, indent, false);
+                    printHelper(root->right, indent, true);
+                }
+                // std::cout<<root->left->data<<std::endl;
+            }
 
         private:
             node_pointer    root;
             node_pointer    end;
             size_type       size;
-
+			
+			void indexEnd()										////a virer
+			{
+				end->left = firstNode();
+				end->right = lastNode();
+			}	
+			node_pointer minimum(node_pointer node) 
+			{
+				while (node->left != end) 
+				{
+					node = node->left;
+				}
+				return node;
+			}
             void rbTransplant(node_pointer u, node_pointer v)
             {
                 if (u->parent == u_nullptr)
@@ -427,7 +456,6 @@ namespace ft
                             leftRotate(x->parent);
                             s = x->parent->right;
                         }
-
                         if (s->left->color == 0 && s->right->color == 0)
                         {
                             // case 3.2
