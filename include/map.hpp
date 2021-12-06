@@ -23,26 +23,26 @@
 
 namespace ft
 {
-    template < class Key, class T, class Compare = ft::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >    /// Faire un rebind d'allocator
+    template < class Key, class T, class Compare = ft::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >
     class map
     {
         public:
-            typedef Key                                     key_type;
-            typedef T                                       mapped_type;
-            typedef ft::pair<const key_type, mapped_type>   value_type;
-            typedef size_t                                  size_type;
-            typedef ptrdiff_t                               difference_type;
-            typedef Compare                                 key_compare;
-            typedef Allocator      							allocator_type;
-            typedef value_type&                             reference;
-            typedef const value_type&                       const_reference;
-            typedef typename Allocator::pointer             pointer;
-            typedef typename Allocator::const_pointer       const_pointer;
-            typedef ft::Itmap< value_type >    				iterator;
-            typedef ft::Itmap< value_type > 				const_iterator;                     ///// remettre const
-            typedef ft::reverse_iterator<iterator>          reverse_iterator;
-            typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
-            // typedef typename Allocator::template rebind< std::allocator< Node<value_type> > >::other allocator_type;
+            typedef Key                                                                 key_type;
+            typedef T                                                                   mapped_type;
+            typedef ft::pair<const key_type, mapped_type>                               value_type;
+            typedef size_t                                                              size_type;
+            typedef ptrdiff_t                                                           difference_type;
+            typedef Compare                                                             key_compare;
+            typedef Allocator                                                           allocator_type;
+            typedef value_type&                                                         reference;
+            typedef const value_type&                                                   const_reference;
+            typedef typename Allocator::pointer                                         pointer;
+            typedef typename Allocator::const_pointer                                   const_pointer;
+            typedef ft::Itmap< value_type >                                             iterator;
+            typedef ft::Itmap< value_type >                                             const_iterator;                     ///// remettre const
+            typedef ft::reverse_iterator<iterator>                                      reverse_iterator;
+            typedef ft::reverse_iterator<const_iterator>                                const_reverse_iterator;
+            typedef typename allocator_type::template rebind< Node<value_type> >::other node_allocator;
 
             //------------------- Value compare : classe imbriquée -------------------//
             class value_compare : ft::binary_function<value_type, value_type, bool>
@@ -134,7 +134,7 @@ namespace ft
             }
             iterator insert (iterator position, const value_type& val)
             {
-                (void)position;                                                                                                         ////// utilser it position
+                (void)position;
                 return (iterator(_tree.insertNode(val), _tree.getEnd()));
             }	
             template <class InputIterator>
@@ -273,12 +273,12 @@ namespace ft
 
             //------------------- Member functions : Allocator -------------------//
             allocator_type get_allocator() const { return (allocator_type()); }
-
-            void debug()                                                                                                                ///// enlever
+/*
+            void debug()
             {
                 _tree.printHelper(_tree.getRoot(), "", true);
             }
-
+*/
         private:
             allocator_type                              _alloc;
             key_compare                                 _comp;

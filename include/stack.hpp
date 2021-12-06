@@ -33,12 +33,12 @@ namespace ft
 
         private:
             //------------------- Non member function : relational operators -------------------//
-            friend bool operator==(const stack& lhs, const stack& rhs) { return (lhs.C == rhs.C); }
-            friend bool operator!=(const stack& lhs, const stack& rhs) { return (lhs.C != rhs.C); }
-            friend bool operator<(const stack& lhs, const stack& rhs) { return (lhs.C < rhs.C); }
-            friend bool operator<=(const stack& lhs, const stack& rhs) { return (lhs.C <= rhs.C); }
-            friend bool operator>(const stack& lhs, const stack& rhs) { return (lhs.C > rhs.C); }
-            friend bool operator>=(const stack& lhs, const stack& rhs) { return (lhs.C >= rhs.C); }
+            friend bool operator==(const stack& lhs, const stack& rhs) { return (lhs.c == rhs.c); }
+            friend bool operator!=(const stack& lhs, const stack& rhs) { return (lhs.c != rhs.c); }
+            friend bool operator<(const stack& lhs, const stack& rhs) { return (lhs.c < rhs.c); }
+            friend bool operator<=(const stack& lhs, const stack& rhs) { return (lhs.c <= rhs.c); }
+            friend bool operator>(const stack& lhs, const stack& rhs) { return (lhs.c > rhs.c); }
+            friend bool operator>=(const stack& lhs, const stack& rhs) { return (lhs.c >= rhs.c); }
 
         protected:
             //------------------- Member object -------------------//

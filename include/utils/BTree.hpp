@@ -1,12 +1,3 @@
-/*
-- Insert et delete avec rebalance de rbtree
-- remplacer end par u_u_nullptr
-- reimplementer u_nullptr
-- recuperer search et clear et size
-- implementer la size dans insert et delete
-- faire swap dans rbtree
-*/
-
 #ifndef BTREE_HPP
 # define BTREE_HPP
 
@@ -189,7 +180,7 @@ namespace ft
                 {
                     rebalDelete(x);
                 }
-				indexEnd();                                                 /// à enlever
+				indexEnd();
                 return (1);
             }
             void clear(node_pointer node)
@@ -271,8 +262,8 @@ namespace ft
             node_pointer getEnd() const { return (this->end); }
             node_pointer getRoot() const { return (this->root); }
             size_type getSize() const { return (this->size); }
-
-            void printHelper(node_pointer root, std::string indent, bool last)                      //// à enlever
+/*
+            void printHelper(node_pointer root, std::string indent, bool last)
             {
                 // print the tree structure on the screen
                 if (root != end)
@@ -295,13 +286,13 @@ namespace ft
                 }
                 // std::cout<<root->left->data<<std::endl;
             }
-
+*/
         private:
             node_pointer    root;
             node_pointer    end;
             size_type       size;
 			
-            void indexEnd()										////a virer
+            void indexEnd()
             {
                 end->left = firstNode();
                 end->right = lastNode();
