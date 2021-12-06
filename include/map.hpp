@@ -6,7 +6,7 @@
 /*   By: pmaldagu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 13:43:00 by pmaldagu          #+#    #+#             */
-/*   Updated: 2021/12/02 17:44:32 by pmaldagu         ###   ########.fr       */
+/*   Updated: 2021/12/03 17:50:15 by pmaldagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,20 @@ namespace ft
             };
 
             //------------------- Member functions : Constructor / Destructor + operator = -------------------//
-            explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _alloc(alloc), _comp(comp), _tree(BTree<key_type, mapped_type>()) {}                                                 /////// finir le constructor
+            explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _alloc(alloc), _comp(comp), _tree() {}
             template <class InputIterator>
-            map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _alloc(alloc), _comp(comp), _tree(BTree<key_type, mapped_type>())                 /////// finir le constructor
+            map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _alloc(alloc), _comp(comp), _tree()
             {
+				//std::cout << "LOL2" << std::endl;
                 this->insert(first, last);
+				//debug();
             }
-            map (const map& x): _alloc(x._alloc), _comp(x._comp), _tree(BTree<key_type, mapped_type>()) 
+            map (const map& x): _alloc(x._alloc), _comp(x._comp), _tree() 
 			{
-				this->insert(x.begin(), x.end());
+				//std::cout << "LOL3" << std::endl;
+				this->insert(x.begin(), x.end());;
 			}
-            ~map() { /*_tree.clear(_tree.getRoot()); */}                                                                                                                                                                                               /////// faire le destructor
+            ~map() { _tree.clear(_tree.getRoot());}
 
             map& operator=(const map& x)
             {
@@ -84,7 +87,6 @@ namespace ft
                     this->insert(x.begin(), x.end());
                     this->_alloc = x._alloc;
                     this->_comp = x._comp;
-                    this->_tree = x._tree;
                 }
                 return (*this);
             }
@@ -94,8 +96,8 @@ namespace ft
             const_iterator begin() const { return (const_iterator(_tree.firstNode(), _tree.getEnd())); }
             iterator end() { return (iterator(_tree.getEnd(), _tree.getEnd())); }
             const_iterator end() const { return (const_iterator(_tree.getEnd(), _tree.getEnd())); }
-            reverse_iterator rbegin() { return (reverse_iterator(iterator(_tree.lastNode(), _tree.getEnd()))); }
-            const_reverse_iterator rbegin() const { return (const_reverse_iterator(iterator(_tree.lastNode(), _tree.getEnd()))); }
+            reverse_iterator rbegin() { return (reverse_iterator(iterator(_tree.getEnd(), _tree.getEnd()))); }
+            const_reverse_iterator rbegin() const { return (const_reverse_iterator(iterator(_tree.getEnd(), _tree.getEnd()))); }
             reverse_iterator rend() { return (reverse_iterator(this->begin())); }
             const_reverse_iterator rend() const { return (const_reverse_iterator(this->begin())); }
 
@@ -228,37 +230,55 @@ namespace ft
 
             iterator lower_bound (const key_type& k)                  ////// Protection?
             {
-                iterator it = this->begin();
-
-                while ((*it).first <= k)
-                    it++;
-                return (it);
+				iterator it = begin();
+				
+				while (it != end())
+				{
+					if (_comp(it->first, k) == false)
+						break;
+					it++;
+				}
+				//std::cout << "FOUND LOWER" << it->first << std::endl;
+				return (it);
             }
             const_iterator lower_bound (const key_type& k) const
             {
-                iterator it = this->begin();
-
-                while ((*it).first <= k)
-                    it++;
-                return (it);
-            }
+				iterator it = begin();
+				
+				while (it != end())
+				{
+					if (!_comp(it->first, k) == false)
+						break;
+					it++;
+				}
+				return (it);
+			}
 
             iterator upper_bound (const key_type& k)
-            {
-                iterator it = this->begin();
-
-                while ((*it).first > k)
-                    it++;
-                return (it);
-            }
+            {	
+				iterator it = begin();
+				
+				while (it != end())
+				{
+					if (_comp(k, it->first) == true)
+						break;
+					it++;
+				}
+				//std::cout << "FOUND UPPER" << it->first << std::endl;
+				return (it);
+			}
             const_iterator upper_bound (const key_type& k) const
-            {
-                iterator it = this->begin();
-
-                while ((*it).first > k)
-                    it++;
-                return (it);
-            }
+            {	
+				iterator it = begin();
+				
+				while (it != end())
+				{
+					if (_comp(k, it->first) == true)
+						break;
+					it++;
+				}
+				return (it);
+			}
 
             pair<iterator,iterator> equal_range (const key_type& k)
             {

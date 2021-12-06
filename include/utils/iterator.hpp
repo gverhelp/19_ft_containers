@@ -3,6 +3,7 @@
 
 # include <cstddef>
 # include <iostream>
+# include "utils.hpp"
 
 namespace ft
 {
@@ -343,13 +344,13 @@ namespace ft
 					}
 					_node = cursor;
 					if (cursor == 0)
-						_node = _end;
+						_node = _end->right;
 					else
 						_node = cursor;
 
 				}
 				else if (cursor == _end)
-					_node = _end->left;
+					_node = _end->right;
 				else
 				{
 					cursor = _node->left;

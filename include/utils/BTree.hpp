@@ -41,16 +41,21 @@ namespace ft
             }
             BTree(const BTree& cpy): root(cpy.root), end(cpy.end), size(cpy.size)
             {
-                //this->clear(this->root);
+                this->clear(this->root);
                 this->insertAll(cpy.root);
             }
-            ~BTree() {}
+            ~BTree() 
+			{
+				node_allocator().destroy(end);
+				node_allocator().deallocate(end, 1);
+				end = nullptr;
+			}
 
             BTree& operator=(const BTree& cpy)
             {
                 if (this != &cpy)
                 {
-                    //this->clear(this->root);
+                    this->clear(this->root);
                     this->insertAll(cpy.root);
                     this->root = cpy.root;
                     this->end = cpy.end;
@@ -67,7 +72,7 @@ namespace ft
                 if ((find = search(val.first)) != u_nullptr)
                     return (find);
                 node_pointer node = node_allocator().allocate(1);
-				node_allocator().construct(node, node_type(val));
+				node_allocator().construct(node, node_type(ft::make_pair<key_type, mapped_type>(val.first, val.second)));
                 node->parent = u_nullptr;
                 node->left = end;
                 node->right = end;
@@ -200,7 +205,7 @@ namespace ft
 				clear(node->right);
 				
 				/* then delete the node */
-				//std::cout << "\n Deleting node: " << node->data;
+				//std::cout << "\n Deleting node: " << node->data.first;
 				node_allocator().destroy(node);
 				node_allocator().deallocate(node, 1);
 				node = nullptr;
