@@ -171,7 +171,7 @@ namespace ft
             if (comp(*first2, *first1)) return false;
         }
         return (first1 == last1) && (first2 != last2);
-	}
+    }
 
     //------------------- Enable if -------------------//     //https://h-deb.clg.qc.ca/Sujets/TrucsScouts/Comprendre_enable_if.html
     template<bool B, class T = void>
