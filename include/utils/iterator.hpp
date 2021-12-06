@@ -149,11 +149,10 @@ namespace ft
             typedef typename ft::iterator_traits<T*>::pointer             pointer;
             typedef typename ft::iterator_traits<T*>::reference           reference;
 
-            operator It< const T >() const { return (It< const T>(this->_node)); } // https://stackoverflow.com/questions/25117970/conversion-operator-with-const
-
             //------------------- Member functions : Constructors / Destructor -------------------//
             It(pointer ptr = nullptr): _node(ptr) {}
-            It(const It& cpy): _node(cpy.base()) {}
+            template < class u >
+            It(const It<u>& cpy): _node(cpy.base()) {}
             ~It() { _node = nullptr; }
             template < class U >
             It& operator=(const It<U>& copy)
@@ -230,8 +229,6 @@ namespace ft
             typedef typename ft::iterator_traits< ft::iterator<ft::bidirectional_iterator_tag, T> >::reference              reference;
             typedef ft::Node<T>                                                                                             node_reference;
             typedef ft::Node<T>*                                                                                            node_pointer;
-
-            operator Itmap< const T >() const { return (Itmap< const T>(this->_node)); }
 
 			Itmap() : _node(u_nullptr), _end(u_nullptr) {}
             Itmap(node_pointer node, node_pointer end ): _node(node), _end(end) {}

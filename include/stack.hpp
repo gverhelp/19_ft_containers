@@ -16,20 +16,20 @@ namespace ft
             typedef size_t      size_type;
 
             //------------------- Member functions -------------------//
-            explicit stack(const container_type& ctnr = container_type()): C(ctnr) {}
+            explicit stack(const container_type& ctnr = container_type()): c(ctnr) {}
             virtual ~stack() {}
             stack& operator=(const stack& copy)
             {
                 if (this != &copy)
-                    this->C = copy.C;
+                    this->c = copy.c;
                 return (*this);
             }
-            value_type& top() { return (this->C.back()); }
-            const value_type& top() const { return (this->C.back()); }
-            bool empty() const { return (this->C.empty()); }
-            size_type size() const { return (this->C.size()); }
-            void push(const value_type& val) { this->C.push_back(val); }
-            void pop() { this->C.pop_back(); }
+            value_type& top() { return (this->c.back()); }
+            const value_type& top() const { return (this->c.back()); }
+            bool empty() const { return (this->c.empty()); }
+            size_type size() const { return (this->c.size()); }
+            void push(const value_type& val) { this->c.push_back(val); }
+            void pop() { this->c.pop_back(); }
 
         private:
             //------------------- Non member function : relational operators -------------------//
@@ -42,7 +42,7 @@ namespace ft
 
         protected:
             //------------------- Member object -------------------//
-            container_type C;
+            container_type c;
     };
 }
 
