@@ -119,19 +119,17 @@ namespace ft
                     return (node);
                 }
                 rebalInsert(node);
-				indexEnd();
+                indexEnd();
                 return (node);
             }
-
-			void insertAll(node_pointer node)
-			{
-				if (node == u_nullptr)
-					return ;
-				insertAll(node->left);
-				insertAll(node->right);
-				insertNode(node->data);
+            void insertAll(node_pointer node)
+            {
+                if (node == u_nullptr)
+                    return ;
+                insertAll(node->left);
+                insertAll(node->right);
+                insertNode(node->data);
             }
-
             size_type deleteNode(node_pointer node, const key_type& key)
             {
                 node_pointer z = end;
@@ -191,26 +189,24 @@ namespace ft
                 {
                     rebalDelete(x);
                 }
-				indexEnd();
+				indexEnd();                                                 /// à enlever
                 return (1);
             }
+            void clear(node_pointer node)
+            {
+                if (node == end)
+                    return ;
 
-			void clear(node_pointer node)
-			{
-				if (node == end)
-					return ;
-			
-				/* first delete both subtrees */
-				clear(node->left);
-				clear(node->right);
-				
-				/* then delete the node */
-				//std::cout << "\n Deleting node: " << node->data.first;
-				node_allocator().destroy(node);
-				node_allocator().deallocate(node, 1);
-				node = nullptr;
+                /* first delete both subtrees */
+                clear(node->left);
+                clear(node->right);
+
+                /* then delete the node */
+                //std::cout << "\n Deleting node: " << node->data.first;
+                node_allocator().destroy(node);
+                node_allocator().deallocate(node, 1);
+                node = nullptr;
             }
-
             node_pointer search(const key_type& key) const
             {
                 node_pointer tmp = this->root;
@@ -249,10 +245,10 @@ namespace ft
             }
             node_pointer firstNode() const
             {
-				node_pointer tmp = root;
-	
-				if (tmp == end)
-					return (end);
+                node_pointer tmp = root;
+
+                if (tmp == end)
+                    return (end);
                 while (tmp->left != end)
                 {
                     tmp = tmp->left;
@@ -261,10 +257,10 @@ namespace ft
             }
             node_pointer lastNode()
             {
-				node_pointer tmp = root;
+                node_pointer tmp = root;
 
-				if (tmp == end)
-					return (end);
+                if (tmp == end)
+                    return (end);
                 while (tmp->right != end)
                 {
                     tmp = tmp->right;
@@ -272,11 +268,11 @@ namespace ft
                 return (tmp);
             }
 			
-			node_pointer getEnd() const { return (this->end); }
+            node_pointer getEnd() const { return (this->end); }
             node_pointer getRoot() const { return (this->root); }
             size_type getSize() const { return (this->size); }
 
-            void printHelper(node_pointer root, std::string indent, bool last)
+            void printHelper(node_pointer root, std::string indent, bool last)                      //// à enlever
             {
                 // print the tree structure on the screen
                 if (root != end)
@@ -305,18 +301,16 @@ namespace ft
             node_pointer    end;
             size_type       size;
 			
-			void indexEnd()										////a virer
-			{
-				end->left = firstNode();
-				end->right = lastNode();
-			}	
-			node_pointer minimum(node_pointer node) 
-			{
-				while (node->left != end) 
-				{
-					node = node->left;
-				}
-				return node;
+            void indexEnd()										////a virer
+            {
+                end->left = firstNode();
+                end->right = lastNode();
+            }	
+            node_pointer minimum(node_pointer node) 
+            {
+                while (node->left != end) 
+                    node = node->left;
+                return (node);
 			}
             void rbTransplant(node_pointer u, node_pointer v)
             {

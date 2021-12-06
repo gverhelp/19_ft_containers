@@ -212,7 +212,7 @@ namespace ft
     template < class T >
     typename ft::It<T>::difference_type operator-(const It<T>& lhs, const ft::It<T>& rhs) { return (lhs.base() - rhs.base()); }
     template < class T, class T2 >
-    typename ft::It<T>::difference_type operator-(const It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.base() - rhs.base()); }  /// iterator - const_itrator
+    typename ft::It<T>::difference_type operator-(const It<T>& lhs, const ft::It<T2>& rhs) { return (lhs.base() - rhs.base()); }  /// iterator - const_iterator
 
     ////////////////////////////////////////////////////////
     //////////////////// Iterator : Map ////////////////////
@@ -254,73 +254,37 @@ namespace ft
             reference operator*() const { return (this->_node->data); }
             pointer operator->() const { return (&this->_node->data); }
             node_pointer base() const { return (this->_node); }
-/*
-            Itmap& operator++()
+
+            Itmap& operator++(void)
             {
-				node_pointer    tmp;
-				node_pointer    root;
+                node_pointer cursor = _node;
 
-				root = this->_node;
-				while (root->parent != nullptr)
-					root = root->parent;
-
-				tmp = this->_node;
-				while (tmp != nullptr && (tmp->right == nullptr || (tmp->parent != nullptr && tmp == tmp->parent->right)))
-					tmp = tmp->parent;
-				if (tmp && tmp->parent == root)
-					tmp = root;
-				if (tmp == nullptr)
-					this->_node++;
-				else
-				{
-					this->_node = tmp->right;
-					while (this->_node != 0)
-					{
-						tmp = this->_node;
-						this->_node = this->_node->left;
-					}
-					this->_node = tmp;
-				}
-				return (*this);
-
-			}
-*/
-			Itmap& operator++(void)
-			{
-				node_pointer cursor = _node;
-				
-				if (_node->right == _end)
-				{
-					cursor = _node->parent;
-					while (cursor != u_nullptr && cursor != _end
-						&& cursor->data.first < _node->data.first)
-						cursor = cursor->parent;
-					if (cursor == 0)
-						_node = _end;
-					else
-						_node = cursor;
-				}
-				else if (cursor == _end)
-				{
-					_node = _end;
-				}
-				else
-				{
-					cursor = _node->right;
-					if (cursor == _end->parent
-						&& cursor->right == _end)
-					{
-						_node = cursor;
-					}
-					else
-					{
-						while (cursor->left != _end)
-							cursor = cursor->left;
-					}
-					_node = cursor;
-				}
-				return (*this);
-			}
+                if (_node->right == _end)
+                {
+                    cursor = _node->parent;
+                    while (cursor != u_nullptr && cursor != _end && cursor->data.first < _node->data.first)
+                        cursor = cursor->parent;
+                    if (cursor == 0)
+                        _node = _end;
+                    else
+                        _node = cursor;
+                }
+                else if (cursor == _end)
+                    _node = _end;
+                else
+                {
+                    cursor = _node->right;
+                    if (cursor == _end->parent && cursor->right == _end)
+                        _node = cursor;
+                    else
+                    {
+                        while (cursor->left != _end)
+                            cursor = cursor->left;
+                    }
+                    _node = cursor;
+                }
+                return (*this);
+            }
 
             Itmap operator++(int) 
             {
@@ -330,45 +294,37 @@ namespace ft
                 return (tmp);
             }
 
-			Itmap& operator--(void)
-			{
-				node_pointer cursor = _node;
-               	
-				if (_node->left == _end)
-				{
-					cursor = _node->parent;
-					while (cursor != u_nullptr && cursor != _end
-						&& cursor->data.first > _node->data.first)
-					{
-						cursor = cursor->parent;
-					}
-					_node = cursor;
-					if (cursor == 0)
-						_node = _end->right;
-					else
-						_node = cursor;
+            Itmap& operator--(void)
+            {
+                node_pointer cursor = _node;
 
-				}
-				else if (cursor == _end)
-					_node = _end->right;
-				else
-				{
-					cursor = _node->left;
-					if (cursor == _end->parent
-						&& cursor->left == _end)
-						_node = cursor;
-					else
-					{
-						while (cursor->right != _end)
-						{
-							cursor = cursor->right;
-						}
-					}
-					_node = cursor;
-				}
-				return (*this);
-			}
-
+                if (_node->left == _end)
+                {
+                    cursor = _node->parent;
+                    while (cursor != u_nullptr && cursor != _end && cursor->data.first > _node->data.first)
+                        cursor = cursor->parent;
+                    _node = cursor;
+                    if (cursor == 0)
+                        _node = _end->right;
+                    else
+                        _node = cursor;
+                }
+                else if (cursor == _end)
+                    _node = _end->right;
+                else
+                {
+                    cursor = _node->left;
+                    if (cursor == _end->parent && cursor->left == _end)
+                        _node = cursor;
+                    else
+                    {
+                        while (cursor->right != _end)
+                            cursor = cursor->right;
+                    }
+                    _node = cursor;
+                }
+                return (*this); 
+            }
             Itmap operator--(int)
             {
                 Itmap tmp(*this);
@@ -378,7 +334,7 @@ namespace ft
             }
         private :
             node_pointer 	_node;
-			node_pointer	_end;
+            node_pointer	_end;
 			
     };
 
@@ -391,24 +347,6 @@ namespace ft
     bool operator!=(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs.base() != rhs.base()); }
     template < class T, class T2 >
     bool operator!=(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs.base() != rhs.base()); }
-	/*
-    template < class T >
-    bool operator<(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs->first < rhs->first); }
-    template < class T, class T2 >
-    bool operator<(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs->first < rhs->first); }
-    template < class T >
-    bool operator<=(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs->first <= rhs->first); }
-    template < class T, class T2 >
-    bool operator<=(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs->first <= rhs->first); }
-    template < class T >
-    bool operator>(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs->first > rhs->first); }
-    template < class T, class T2 >
-    bool operator>(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs->first > rhs->first); }
-    template < class T >
-    bool operator>=(const ft::Itmap<T>& lhs, const ft::Itmap<T>& rhs) { return (lhs->first >= rhs->first); }
-    template < class T, class T2 >
-    bool operator>=(const ft::Itmap<T>& lhs, const ft::Itmap<T2>& rhs) { return (lhs->first >= rhs->first); }
-	*/
 }
 
 #endif

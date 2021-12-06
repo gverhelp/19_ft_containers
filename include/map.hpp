@@ -68,13 +68,10 @@ namespace ft
             template <class InputIterator>
             map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _alloc(alloc), _comp(comp), _tree()
             {
-				//std::cout << "LOL2" << std::endl;
                 this->insert(first, last);
-				//debug();
             }
             map (const map& x): _alloc(x._alloc), _comp(x._comp), _tree() 
 			{
-				//std::cout << "LOL3" << std::endl;
 				this->insert(x.begin(), x.end());;
 			}
             ~map() { _tree.clear(_tree.getRoot());}
@@ -143,55 +140,46 @@ namespace ft
             template <class InputIterator>
             void insert (InputIterator first, InputIterator last)
             {
-				//map cpy(first, last);
-
-				//first = cpy.begin();
-				//last = cpy.end();
                 while (first != last)
                 {
                     _tree.insertNode(*first);
                     first++;
                 }
             }
-
             void erase(iterator position)
             {
                 iterator it;
 
-				it = this->begin();
+                it = this->begin();
                 while (it != position)
-                {
                     it++;
-                }
                 if (it == position)
                     _tree.deleteNode(it.base(), it->first);
             }	
             size_type erase(const key_type& key)
             {
-				return (_tree.deleteNode(_tree.getRoot(), key));
+                return (_tree.deleteNode(_tree.getRoot(), key));
             }
             void erase(iterator first, iterator last)
           	{ 
-                //if ((*first).first > (*last).first)
-                //    return ;
-				map cpy(first, last);
+                map cpy(first, last);
 
-				first = cpy.begin();
-				last = cpy.end();
+                first = cpy.begin();
+                last = cpy.end();
                 while (first != last)
                 {
                     _tree.deleteNode(_tree.getRoot(), first->first);
                     first++;
                 }
             }
-            void swap (map& x)                                                                           ////// remplacer BTree par un pointer sur tree dans map
+            void swap (map& x)
             {
                 _tree.swap(x._tree);
             }
             void clear()
-			{
-				erase(begin(), end());
-			}
+            {
+                erase(begin(), end());
+            }
 
             //------------------- Member functions : Observers -------------------//
             key_compare key_comp() const
@@ -205,81 +193,75 @@ namespace ft
 
             //------------------- Member functions : Operations -------------------//
             iterator find (const key_type& k) 
-			{	
-				ft::Node<value_type>*   find;
+            {	
+                ft::Node<value_type>*   find;
 
-				if ((find = _tree.search(k)) == u_nullptr)
-					find = _tree.getEnd();
-				return (iterator(find, _tree.getEnd()));
-			}
+                if ((find = _tree.search(k)) == u_nullptr)
+                    find = _tree.getEnd();
+                return (iterator(find, _tree.getEnd()));
+            }
             const_iterator find (const key_type& k) const 
-			{ 				
-				ft::Node<value_type>*   find;
-				
-				if ((find = _tree.search(k)) == u_nullptr)
-					find = _tree.getEnd();
-				return (iterator(find, _tree.getEnd())); 
-			}
+            { 				
+                ft::Node<value_type>*   find;
 
+                if ((find = _tree.search(k)) == u_nullptr)
+                    find = _tree.getEnd();
+                return (iterator(find, _tree.getEnd()));
+            }
             size_type count (const key_type& k) const
             {
                 if (_tree.search(k) == u_nullptr)
                     return (0);
                 return (1);
             }
-
-            iterator lower_bound (const key_type& k)                  ////// Protection?
+            iterator lower_bound (const key_type& k)
             {
-				iterator it = begin();
-				
-				while (it != end())
-				{
-					if (_comp(it->first, k) == false)
-						break;
-					it++;
-				}
-				//std::cout << "FOUND LOWER" << it->first << std::endl;
-				return (it);
+                iterator it = begin();
+
+                while (it != end())
+                {
+                    if (_comp(it->first, k) == false)
+                        break;
+                    it++;
+                }
+                return (it);
             }
             const_iterator lower_bound (const key_type& k) const
             {
-				iterator it = begin();
-				
-				while (it != end())
-				{
-					if (!_comp(it->first, k) == false)
-						break;
-					it++;
-				}
-				return (it);
-			}
+                iterator it = begin();
 
+                while (it != end())
+                {
+                    if (!_comp(it->first, k) == false)
+                        break;
+                    it++;
+                }
+                return (it);
+            }
             iterator upper_bound (const key_type& k)
             {	
-				iterator it = begin();
-				
-				while (it != end())
-				{
-					if (_comp(k, it->first) == true)
-						break;
-					it++;
-				}
-				//std::cout << "FOUND UPPER" << it->first << std::endl;
-				return (it);
+                iterator it = begin();
+
+                while (it != end())
+                {
+                    if (_comp(k, it->first) == true)
+                        break;
+                    it++;
+                }
+                return (it);
 			}
             const_iterator upper_bound (const key_type& k) const
             {	
-				iterator it = begin();
-				
-				while (it != end())
-				{
-					if (_comp(k, it->first) == true)
-						break;
-					it++;
-				}
-				return (it);
-			}
+                iterator it = begin();
 
+                while (it != end())
+                {
+                    if (_comp(k, it->first) == true)
+                        break;
+                    it++;
+                }
+                return (it);
+			}
             pair<iterator,iterator> equal_range (const key_type& k)
             {
                 return (ft::make_pair<iterator, iterator>(lower_bound(k), upper_bound(k)));
@@ -300,7 +282,7 @@ namespace ft
         private:
             allocator_type                              _alloc;
             key_compare                                 _comp;
-			ft::BTree<key_type, mapped_type>			_tree;
+            ft::BTree<key_type, mapped_type>			_tree;
     };
 
     //------------------- Non-member functions -------------------//
