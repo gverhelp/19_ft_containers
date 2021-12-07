@@ -36,12 +36,11 @@ namespace ft
                 this->insertAll(cpy.root);
             }
             ~BTree() 
-			{
-				node_allocator().destroy(end);
-				node_allocator().deallocate(end, 1);
-				end = nullptr;
-			}
-
+            {
+                node_allocator().destroy(end);
+                node_allocator().deallocate(end, 1);
+                end = nullptr;
+            }
             BTree& operator=(const BTree& cpy)
             {
                 if (this != &cpy)
@@ -58,12 +57,12 @@ namespace ft
             //------------------- Member functions -------------------//
             node_pointer insertNode(const value_type& val) 
             {
-				node_pointer find;
+                node_pointer find;
 
                 if ((find = search(val.first)) != u_nullptr)
                     return (find);
                 node_pointer node = node_allocator().allocate(1);
-				node_allocator().construct(node, node_type(ft::make_pair<key_type, mapped_type>(val.first, val.second)));
+                node_allocator().construct(node, node_type(ft::make_pair<key_type, mapped_type>(val.first, val.second)));
                 node->parent = u_nullptr;
                 node->left = end;
                 node->right = end;
@@ -101,12 +100,12 @@ namespace ft
                 if (node->parent == u_nullptr)
                 {
                     node->color = 0;
-					indexEnd();
+                    indexEnd();
                     return (node);
                 }
                 if (node->parent->parent == u_nullptr)
                 {
-					indexEnd();
+                    indexEnd();
                     return (node);
                 }
                 rebalInsert(node);
@@ -180,7 +179,7 @@ namespace ft
                 {
                     rebalDelete(x);
                 }
-				indexEnd();
+                indexEnd();
                 return (1);
             }
             void clear(node_pointer node)
@@ -302,7 +301,7 @@ namespace ft
                 while (node->left != end) 
                     node = node->left;
                 return (node);
-			}
+            }
             void rbTransplant(node_pointer u, node_pointer v)
             {
                 if (u->parent == u_nullptr)

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   map.hpp                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pmaldagu <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/28 13:43:00 by pmaldagu          #+#    #+#             */
-/*   Updated: 2021/12/03 17:50:15 by pmaldagu         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MAP_HPP
 # define MAP_HPP
 
@@ -39,7 +27,7 @@ namespace ft
             typedef typename Allocator::pointer                                         pointer;
             typedef typename Allocator::const_pointer                                   const_pointer;
             typedef ft::Itmap< value_type >                                             iterator;
-            typedef ft::Itmap< value_type >                                             const_iterator;                     ///// remettre const
+            typedef ft::Itmap< value_type >                                             const_iterator;
             typedef ft::reverse_iterator<iterator>                                      reverse_iterator;
             typedef ft::reverse_iterator<const_iterator>                                const_reverse_iterator;
             typedef typename allocator_type::template rebind< Node<value_type> >::other node_allocator;
@@ -47,7 +35,7 @@ namespace ft
             //------------------- Value compare : classe imbriquée -------------------//
             class value_compare : ft::binary_function<value_type, value_type, bool>
             {
-				friend class map<key_type, mapped_type, key_compare, allocator_type>;
+                friend class map<key_type, mapped_type, key_compare, allocator_type>;
 
                 protected:
                     Compare comp;
@@ -71,9 +59,9 @@ namespace ft
                 this->insert(first, last);
             }
             map (const map& x): _alloc(x._alloc), _comp(x._comp), _tree() 
-			{
-				this->insert(x.begin(), x.end());;
-			}
+            {
+                this->insert(x.begin(), x.end());;
+            }
             ~map() { _tree.clear(_tree.getRoot());}
 
             map& operator=(const map& x)
@@ -102,9 +90,7 @@ namespace ft
             bool empty() const
             {
                 if (_tree.getSize() == 0)
-				{
                     return (true);
-				}
                 return (false);
             }
             size_type size() const { return (_tree.getSize()); }
@@ -112,13 +98,13 @@ namespace ft
 
             //------------------- Member functions : Element access -------------------//
             mapped_type& operator[] (const key_type& k)
-			{
+            {
                 ft::Node<value_type>* ptr = _tree.search(k);
 
                 if (ptr == u_nullptr)
                     ptr = _tree.insertNode(ft::make_pair<key_type, mapped_type>(k, mapped_type()));
-				return (ptr->data.second);
-			}
+                return (ptr->data.second);
+            }
 
             //------------------- Member functions : Modifiers -------------------//	
 
@@ -161,7 +147,7 @@ namespace ft
                 return (_tree.deleteNode(_tree.getRoot(), key));
             }
             void erase(iterator first, iterator last)
-          	{ 
+            { 
                 map cpy(first, last);
 
                 first = cpy.begin();
@@ -282,7 +268,7 @@ namespace ft
         private:
             allocator_type                              _alloc;
             key_compare                                 _comp;
-            ft::BTree<key_type, mapped_type>			_tree;
+            ft::BTree<key_type, mapped_type>            _tree;
     };
 
     //------------------- Non-member functions -------------------//

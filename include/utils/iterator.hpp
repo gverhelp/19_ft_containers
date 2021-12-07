@@ -230,7 +230,7 @@ namespace ft
             typedef ft::Node<T>                                                                                             node_reference;
             typedef ft::Node<T>*                                                                                            node_pointer;
 
-			Itmap() : _node(u_nullptr), _end(u_nullptr) {}
+            Itmap() : _node(u_nullptr), _end(u_nullptr) {}
             Itmap(node_pointer node, node_pointer end ): _node(node), _end(end) {}
             template < class U >
             Itmap(const Itmap<U>& cpy): _node(cpy._node), _end(cpy._end) {}
@@ -239,11 +239,11 @@ namespace ft
             Itmap& operator=(const Itmap<U>& copy)
             {
                 if (this != &copy)
-				{
+                {
                     this->_node = copy._node;
-					this->_end = copy._end;
-					this->_comp = copy._comp;
-				}
+                    this->_end = copy._end;
+                    this->_comp = copy._comp;
+                }
                 return (*this);
             }
 
