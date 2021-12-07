@@ -113,8 +113,8 @@ namespace ft
                 ft::Node<value_type>*   ptr;
                 bool                    find = true;
 
-				if ((ptr = _tree.search(val.first)) != u_nullptr)
-					find = false;
+                if ((ptr = _tree.search(val.first)) != u_nullptr)
+                    find = false;
                 ptr = _tree.insertNode(val);
 				return (ft::make_pair<iterator, bool>(iterator(ptr, _tree.getEnd()), find));
             }

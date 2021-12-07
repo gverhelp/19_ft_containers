@@ -15,7 +15,7 @@ namespace ft
             typedef Key                                     key_type;
             typedef ft::pair<const key_type, mapped_type>   value_type;
             typedef std::allocator< Node<value_type> >      node_allocator;
-			typedef ft::Node<value_type>*					node_pointer;
+            typedef ft::Node<value_type>*					node_pointer;
             typedef ft::Node<value_type>                    node_type;
 
             //------------------- Constructor and destructor -------------------//
@@ -28,7 +28,7 @@ namespace ft
                 end->right = u_nullptr;
                 end->color = 0;
                 root = end;
-				size = 0;
+                size = 0;
             }
             BTree(const BTree& cpy): root(cpy.root), end(cpy.end), size(cpy.size)
             {
