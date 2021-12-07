@@ -27,29 +27,29 @@ namespace ft
             typedef size_t                                                  size_type;
 
             //------------------- Member functions : Constructors & Destructor + operator = -------------------//
-            explicit vector(const allocator_type& alloc = allocator_type()): _size(0), _maxSize(0), _base(alloc)
+            explicit vector(const allocator_type& alloc = allocator_type()): _size(0), _capacity(0), _base(alloc)
             {
                 this->_ptr = this->_base.allocate(0);
             }
-            explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()): _size(n), _maxSize(n), _base(alloc)
+            explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()): _size(n), _capacity(n), _base(alloc)
             {
                 this->_ptr = this->_base.allocate(n);
                 for (size_t a = 0; a < n; a++)
                     this->_base.construct(this->_ptr + a, val);
             }
             template <class InputIterator>
-            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr): _size(0), _maxSize(0), _base(alloc) //Range constructor
+            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = nullptr): _size(0), _capacity(0), _base(alloc) //Range constructor
             {
                 for (; first < last; first++)
                     this->_size++;
-                this->_maxSize = this->_size;
+                this->_capacity = this->_size;
                 first -= _size;
                 this->_ptr = this->_base.allocate(this->_size);
                 for (size_t a = 0; a < this->_size; a++)
                     this->_base.construct(_ptr + a, *(first + a));
             }
 
-            vector(const vector& x): _size(x._size), _maxSize(x._maxSize), _base(x._base)
+            vector(const vector& x): _size(x._size), _capacity(x._capacity), _base(x._base)
             {
                 this->_ptr = this->_base.allocate(0);
                 *this = x;
@@ -59,19 +59,19 @@ namespace ft
                 if (this != &x)
                 {
                     this->clear();
-                    this->_base.deallocate(this->_ptr, this->_maxSize);
-                    this->_ptr = this->_base.allocate(x._maxSize);
+                    this->_base.deallocate(this->_ptr, this->_capacity);
+                    this->_ptr = this->_base.allocate(x._capacity);
                     for (size_t a = 0; a < x._size; a++)
                         this->_base.construct(this->_ptr + a, *(x._ptr + a));
                     this->_size = x._size;
-                    this->_maxSize = x._maxSize;
+                    this->_capacity = x._capacity;
                 }
                 return (*this);
             }
             virtual ~vector()
             {
                 this->clear();
-                this->_base.deallocate(this->_ptr, this->_maxSize);
+                this->_base.deallocate(this->_ptr, this->_capacity);
             }
 
             //------------------- Member functions : Iterators -------------------//
@@ -94,15 +94,15 @@ namespace ft
                     for (size_t a = n; a < this->_size; a++)
                         this->_base.destroy(this->_ptr + a);
                 }
-                else if (n > this->_size && n <= this->_maxSize)
+                else if (n > this->_size && n <= this->_capacity)
                 {
                     for (size_t a = this->_size; a < n; a++)
                         this->_base.construct(this->_ptr + a, val);
                 }
-                else if (n > this->_size && n > this->_maxSize)
+                else if (n > this->_size && n > this->_capacity)
                 {
-                    if (n < this->_maxSize * 2)
-                        reserve(this->_maxSize * 2);
+                    if (n < this->_capacity * 2)
+                        reserve(this->_capacity * 2);
                     else
                         reserve(n);
                     for (size_t a = this->_size; a < n; a++)
@@ -110,7 +110,7 @@ namespace ft
                 }
                 this->_size = n;
             }
-            size_type capacity() const { return (this->_maxSize); } //Return maximum size 
+            size_type capacity() const { return (this->_capacity); } //Return maximum size 
             bool empty() const
             {
                 if (this->_size == 0)
@@ -119,18 +119,18 @@ namespace ft
             }
             void reserve(size_type n) //Request a change in capacity
             {
-                if (n > this->_maxSize)
+                if (n > this->_capacity)
                 {
                     vector copy;
 
                     copy = *this;
                     this->clear();
-                    this->_base.deallocate(this->_ptr, this->_maxSize);
+                    this->_base.deallocate(this->_ptr, this->_capacity);
                     this->_ptr = this->_base.allocate(n);
                     for (size_t a = 0; a < copy._size; a++)
                         this->_base.construct(this->_ptr + a, *(copy._ptr + a));
                     this->_size = copy._size;
-                    this->_maxSize = n;
+                    this->_capacity = n;
                 }
             }
 
@@ -160,7 +160,7 @@ namespace ft
             {
                 clear();
                 insert(begin(), first, last);
-                this->_maxSize = _size;
+                this->_capacity = _size;
             }
             void assign(size_type n, const value_type& val)
             {
@@ -252,13 +252,13 @@ namespace ft
 
                 tmp = this->_ptr;
                 tmp2 = this->_size;
-                tmp3 = this->_maxSize;
+                tmp3 = this->_capacity;
                 this->_ptr = x._ptr;
                 this->_size = x._size;
-                this->_maxSize = x._maxSize;
+                this->_capacity = x._capacity;
                 x._ptr = tmp;
                 x._size = tmp2;
-                x._maxSize = tmp3;
+                x._capacity = tmp3;
             }
             void clear()
             {
@@ -271,10 +271,10 @@ namespace ft
             allocator_type get_allocator() const { return (this->_base); }
 
         private:
-            size_type   _size;
-            size_type   _maxSize;
-            Alloc       _base;
-            pointer     _ptr;
+            size_type       _size;
+            size_type       _capacity;
+            allocator_type  _base;
+            pointer         _ptr;
     };
 
     //------------------- Non-member functions -------------------//
